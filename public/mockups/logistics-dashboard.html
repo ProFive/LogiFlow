@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LogiFlow — Phần Mềm Quản Lý Vận Tải</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e17;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: rgba(255,255,255,0.07);
+    --accent: #f97316;
+    --accent2: #3b82f6;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --text: #f1f5f9;
+    --muted: #64748b;
+    --muted2: #94a3b8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: fixed; left: 0; top: 0; bottom: 0;
+    width: 240px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    z-index: 100;
+    padding: 0;
+  }
+
+  .logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-mark {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  nav { padding: 16px 12px; flex: 1; }
+
+  .nav-section {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    padding: 12px 8px 6px;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--muted2);
+    transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active {
+    background: rgba(249,115,22,0.12);
+    color: var(--accent);
+  }
+
+  .nav-item .icon { width: 18px; text-align: center; font-size: 16px; }
+
+  .badge {
+    margin-left: auto;
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 20px;
+  }
+
+  .sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .user-card {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface2);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .avatar {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), #fb923c);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    color: white;
+  }
+
+  .user-info .name { font-size: 13px; font-weight: 500; }
+  .user-info .role { font-size: 11px; color: var(--muted); }
+
+  /* MAIN */
+  .main {
+    margin-left: 240px;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+  }
+
+  .page-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+  .search-bar {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    color: var(--muted2);
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer;
+    width: 220px;
+  }
+
+  .icon-btn {
+    width: 36px; height: 36px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px;
+    position: relative;
+  }
+
+  .notif-dot {
+    position: absolute; top: 6px; right: 6px;
+    width: 7px; height: 7px;
+    background: var(--accent); border-radius: 50%;
+  }
+
+  /* CONTENT */
+  .content { padding: 28px; flex: 1; }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .stat-card:nth-child(1) { animation-delay: 0s; }
+  .stat-card:nth-child(2) { animation-delay: 0.08s; }
+  .stat-card:nth-child(3) { animation-delay: 0.16s; }
+  .stat-card:nth-child(4) { animation-delay: 0.24s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .stat-card.orange::before { background: var(--accent); }
+  .stat-card.blue::before { background: var(--accent2); }
+  .stat-card.green::before { background: var(--green); }
+  .stat-card.yellow::before { background: var(--yellow); }
+
+  .stat-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .stat-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+  }
+
+  .stat-icon.orange { background: rgba(249,115,22,0.15); }
+  .stat-icon.blue { background: rgba(59,130,246,0.15); }
+  .stat-icon.green { background: rgba(34,197,94,0.15); }
+  .stat-icon.yellow { background: rgba(234,179,8,0.15); }
+
+  .stat-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-change {
+    font-size: 12px;
+    display: flex; align-items: center; gap: 4px;
+  }
+
+  .stat-change.up { color: var(--green); }
+  .stat-change.down { color: var(--red); }
+
+  /* GRID 2 COL */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    animation: fadeUp 0.4s ease 0.3s both;
+  }
+
+  .card-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .card-action {
+    font-size: 12px;
+    color: var(--accent);
+    cursor: pointer;
+    background: rgba(249,115,22,0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; }
+
+  thead th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    font-weight: 500;
+    padding: 10px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.12s;
+    cursor: pointer;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+
+  td {
+    padding: 12px 20px;
+    font-size: 13px;
+  }
+
+  .order-id {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent2);
+  }
+
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .status-badge.moving { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .status-badge.done { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .status-badge.wait { background: rgba(234,179,8,0.15); color: #facc15; }
+  .status-badge.issue { background: rgba(239,68,68,0.15); color: #f87171; }
+
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  /* MAP CARD */
+  .map-card { position: relative; }
+
+  .map-placeholder {
+    background: #0d1520;
+    height: 260px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Fake map grid */
+  .map-placeholder::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(59,130,246,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59,130,246,0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Road lines */
+  .road {
+    position: absolute;
+    background: rgba(59,130,246,0.15);
+  }
+
+  .road.h { height: 2px; }
+  .road.v { width: 2px; }
+
+  .vehicle-marker {
+    position: absolute;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    border: 2px solid;
+    animation: pulse 2s infinite;
+  }
+
+  .vehicle-marker.active {
+    background: rgba(34,197,94,0.2);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .vehicle-marker.idle {
+    background: rgba(234,179,8,0.2);
+    border-color: var(--yellow);
+    color: var(--yellow);
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(34,197,94,0); }
+  }
+
+  .map-route {
+    position: absolute;
+    border: 2px dashed rgba(249,115,22,0.5);
+    border-radius: 50%;
+    width: 120px; height: 60px;
+    transform: rotate(-20deg);
+  }
+
+  .map-legend {
+    position: absolute; bottom: 12px; left: 12px;
+    display: flex; gap: 12px;
+  }
+
+  .legend-item {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 10px; color: var(--muted2);
+    background: rgba(10,14,23,0.8);
+    padding: 4px 8px; border-radius: 6px;
+    backdrop-filter: blur(4px);
+  }
+
+  .legend-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* FLEET STATUS */
+  .fleet-list { padding: 0; }
+
+  .fleet-item {
+    display: flex; align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+
+  .fleet-item:last-child { border-bottom: none; }
+  .fleet-item:hover { background: var(--surface2); }
+
+  .vehicle-id {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    width: 60px;
+  }
+
+  .vehicle-info { flex: 1; }
+  .vehicle-driver { font-size: 12px; font-weight: 500; }
+  .vehicle-route { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+  .fuel-bar {
+    width: 60px;
+  }
+
+  .fuel-label {
+    font-size: 10px; color: var(--muted);
+    display: flex; justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .fuel-track {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .fuel-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+
+  .fuel-fill.high { background: var(--green); }
+  .fuel-fill.mid { background: var(--yellow); }
+  .fuel-fill.low { background: var(--red); }
+
+  /* BOTTOM ROW */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* MINI CHART */
+  .chart-bars {
+    display: flex; align-items: flex-end; gap: 6px;
+    height: 80px;
+    padding: 16px 20px;
+  }
+
+  .bar-group { display: flex; gap: 2px; align-items: flex-end; flex: 1; }
+
+  .bar {
+    flex: 1;
+    border-radius: 3px 3px 0 0;
+    transition: opacity 0.2s;
+    cursor: pointer;
+    min-width: 8px;
+  }
+
+  .bar:hover { opacity: 0.8; }
+  .bar.primary { background: var(--accent); }
+  .bar.secondary { background: var(--accent2); opacity: 0.4; }
+
+  .chart-labels {
+    display: flex; gap: 6px;
+    padding: 4px 20px 14px;
+  }
+
+  .chart-label {
+    flex: 1;
+    font-size: 9px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  /* DRIVER LIST */
+  .driver-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.12s;
+    cursor: pointer;
+  }
+
+  .driver-item:last-child { border-bottom: none; }
+  .driver-item:hover { background: var(--surface2); }
+
+  .driver-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: white;
+    flex-shrink: 0;
+  }
+
+  .driver-name { font-size: 13px; font-weight: 500; }
+  .driver-trips { font-size: 11px; color: var(--muted); }
+
+  .driver-score {
+    margin-left: auto;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .driver-score.a { color: var(--green); }
+  .driver-score.b { color: var(--yellow); }
+
+  /* ALERTS */
+  .alert-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .alert-item:last-child { border-bottom: none; }
+
+  .alert-icon {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .alert-icon.warn { background: rgba(234,179,8,0.15); }
+  .alert-icon.error { background: rgba(239,68,68,0.15); }
+  .alert-icon.info { background: rgba(59,130,246,0.15); }
+
+  .alert-text { font-size: 12px; line-height: 1.5; }
+  .alert-time { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  /* TABS */
+  .tabs {
+    display: flex; gap: 4px;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab {
+    font-size: 12px;
+    padding: 10px 14px;
+    cursor: pointer;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* HEADER NAV PILL */
+  .nav-pills {
+    display: flex; gap: 4px;
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 3px;
+  }
+
+  .nav-pill {
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--muted2);
+    transition: all 0.15s;
+  }
+
+  .nav-pill.active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'DM Sans', sans-serif;
+    transition: opacity 0.15s;
+  }
+
+  .btn-primary:hover { opacity: 0.9; }
+
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">
+      <div class="logo-icon">🚛</div>
+      LogiFlow
+    </div>
+    <div class="logo-sub">Quản lý vận tải</div>
+  </div>
+
+  <nav>
+    <div class="nav-section">Tổng quan</div>
+    <div class="nav-item active">
+      <span class="icon">📊</span> Dashboard
+    </div>
+    <div class="nav-item">
+      <span class="icon">🗺️</span> Bản đồ xe
+    </div>
+
+    <div class="nav-section">Vận hành</div>
+    <div class="nav-item">
+      <span class="icon">📦</span> Đơn hàng
+      <span class="badge">12</span>
+    </div>
+    <div class="nav-item">
+      <span class="icon">🚚</span> Chuyến xe
+    </div>
+    <div class="nav-item">
+      <span class="icon">👤</span> Tài xế
+    </div>
+    <div class="nav-item">
+      <span class="icon">🚛</span> Phương tiện
+    </div>
+
+    <div class="nav-section">Tài chính</div>
+    <div class="nav-item">
+      <span class="icon">💰</span> Chi phí
+    </div>
+    <div class="nav-item">
+      <span class="icon">🧾</span> Hóa đơn
+    </div>
+    <div class="nav-item">
+      <span class="icon">📈</span> Báo cáo
+    </div>
+
+    <div class="nav-section">Hệ thống</div>
+    <div class="nav-item">
+      <span class="icon">⚙️</span> Cài đặt
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="avatar">TN</div>
+      <div class="user-info">
+        <div class="name">Trần Nam</div>
+        <div class="role">Quản trị viên</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="page-title">Dashboard</div>
+    <div class="topbar-right">
+      <div class="nav-pills">
+        <div class="nav-pill active" data-period="today" onclick="setDashboardPeriod('today', this)">Hôm nay</div>
+        <div class="nav-pill" data-period="week" onclick="setDashboardPeriod('week', this)">Tuần này</div>
+        <div class="nav-pill" data-period="month" onclick="setDashboardPeriod('month', this)">Tháng này</div>
+      </div>
+      <div class="search-bar">
+        🔍 <span>Tìm đơn hàng, xe...</span>
+      </div>
+      <div class="icon-btn">
+        🔔
+        <div class="notif-dot"></div>
+      </div>
+      <button class="btn-primary">+ Tạo chuyến</button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card orange">
+        <div class="stat-top">
+          <div class="stat-label">Chuyến hôm nay</div>
+          <div class="stat-icon orange">🚚</div>
+        </div>
+        <div class="stat-value">47</div>
+        <div class="stat-change up">▲ 12% so với hôm qua</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-top">
+          <div class="stat-label">Xe đang chạy</div>
+          <div class="stat-icon blue">📍</div>
+        </div>
+        <div class="stat-value">23</div>
+        <div class="stat-change up">▲ 3 xe so với 8h trước</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-top">
+          <div class="stat-label">Doanh thu hôm nay</div>
+          <div class="stat-icon green">💵</div>
+        </div>
+        <div class="stat-value">84.2M</div>
+        <div class="stat-change up">▲ 8.4% so với hôm qua</div>
+      </div>
+      <div class="stat-card yellow">
+        <div class="stat-top">
+          <div class="stat-label">Đơn chờ xử lý</div>
+          <div class="stat-icon yellow">⏳</div>
+        </div>
+        <div class="stat-value">12</div>
+        <div class="stat-change down">▼ Cần duyệt ngay</div>
+      </div>
+    </div>
+
+    <!-- MAP + FLEET -->
+    <div class="grid-2">
+
+      <!-- MAP -->
+      <div class="card map-card">
+        <div class="card-header">
+          <div class="card-title">🗺️ Vị trí xe thời gian thực</div>
+          <div class="card-action">Xem toàn màn hình</div>
+        </div>
+        <div class="map-placeholder">
+          <!-- Roads -->
+          <div class="road h" style="top:35%; left:0; width:100%"></div>
+          <div class="road h" style="top:65%; left:0; width:100%"></div>
+          <div class="road v" style="left:25%; top:0; height:100%"></div>
+          <div class="road v" style="left:60%; top:0; height:100%"></div>
+          <div class="road v" style="left:80%; top:0; height:100%"></div>
+
+          <!-- Route -->
+          <div class="map-route" style="top:20%; left:30%; width:200px; height:80px;"></div>
+
+          <!-- Vehicles -->
+          <div class="vehicle-marker active" style="top:28%; left:22%">🚛</div>
+          <div class="vehicle-marker active" style="top:55%; left:55%">🚚</div>
+          <div class="vehicle-marker active" style="top:20%; left:70%">🚛</div>
+          <div class="vehicle-marker idle" style="top:60%; left:15%">🚐</div>
+          <div class="vehicle-marker active" style="top:40%; left:78%">🚚</div>
+          <div class="vehicle-marker idle" style="top:75%; left:45%">🚛</div>
+
+          <div class="map-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Đang chạy (18)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div> Chờ (5)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> Sự cố (2)</div>
+          </div>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="tabs">
+          <div class="tab active">Chuyến đang chạy</div>
+          <div class="tab">Chờ xuất phát</div>
+          <div class="tab">Hoàn thành</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Mã đơn</th>
+              <th>Tuyến đường</th>
+              <th>Tài xế</th>
+              <th>Xe</th>
+              <th>Trạng thái</th>
+              <th>ETA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="order-id">#VT-2401</span></td>
+              <td>HCM → Bình Dương</td>
+              <td>Nguyễn Văn A</td>
+              <td>51C-123.45</td>
+              <td><span class="status-badge moving"><span class="status-dot"></span>Đang chạy</span></td>
+              <td>14:30</td>
+            </tr>
+            <tr>
+              <td><span class="order-id">#VT-2402</span></td>
+              <td>HCM → Long An</td>
+              <td>Trần Văn B</td>
+              <td>51D-456.78</td>
+              <td><span class="status-badge moving"><span class="status-dot"></span>Đang chạy</span></td>
+              <td>15:15</td>
+            </tr>
+            <tr>
+              <td><span class="order-id">#VT-2403</span></td>
+              <td>HCM → Đồng Nai</td>
+              <td>Lê Thị C</td>
+              <td>51E-789.01</td>
+              <td><span class="status-badge done"><span class="status-dot"></span>Đã giao</span></td>
+              <td>13:45</td>
+            </tr>
+            <tr>
+              <td><span class="order-id">#VT-2404</span></td>
+              <td>HCM → Tây Ninh</td>
+              <td>Phạm Văn D</td>
+              <td>51G-234.56</td>
+              <td><span class="status-badge wait"><span class="status-dot"></span>Chờ hàng</span></td>
+              <td>16:00</td>
+            </tr>
+            <tr>
+              <td><span class="order-id">#VT-2405</span></td>
+              <td>HCM → Vũng Tàu</td>
+              <td>Hoàng Văn E</td>
+              <td>51H-567.89</td>
+              <td><span class="status-badge issue"><span class="status-dot"></span>Sự cố</span></td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- FLEET STATUS -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🚛 Tình trạng đội xe</div>
+          <div class="card-action">Quản lý</div>
+        </div>
+        <div class="fleet-list">
+          <div class="fleet-item">
+            <div class="vehicle-id" style="color:var(--green)">51C-123</div>
+            <div class="vehicle-info">
+              <div class="vehicle-driver">Nguyễn Văn A</div>
+              <div class="vehicle-route">HCM → Bình Dương</div>
+            </div>
+            <div class="fuel-bar">
+              <div class="fuel-label"><span>Nhiên liệu</span><span>78%</span></div>
+              <div class="fuel-track"><div class="fuel-fill high" style="width:78%"></div></div>
+            </div>
+            <span class="status-badge moving" style="font-size:10px">Chạy</span>
+          </div>
+          <div class="fleet-item">
+            <div class="vehicle-id" style="color:var(--green)">51D-456</div>
+            <div class="vehicle-info">
+              <div class="vehicle-driver">Trần Văn B</div>
+              <div class="vehicle-route">HCM → Long An</div>
+            </div>
+            <div class="fuel-bar">
+              <div class="fuel-label"><span>Nhiên liệu</span><span>45%</span></div>
+              <div class="fuel-track"><div class="fuel-fill mid" style="width:45%"></div></div>
+            </div>
+            <span class="status-badge moving" style="font-size:10px">Chạy</span>
+          </div>
+          <div class="fleet-item">
+            <div class="vehicle-id" style="color:var(--yellow)">51E-789</div>
+            <div class="vehicle-info">
+              <div class="vehicle-driver">Lê Thị C</div>
+              <div class="vehicle-route">Đang chờ tại kho</div>
+            </div>
+            <div class="fuel-bar">
+              <div class="fuel-label"><span>Nhiên liệu</span><span>90%</span></div>
+              <div class="fuel-track"><div class="fuel-fill high" style="width:90%"></div></div>
+            </div>
+            <span class="status-badge wait" style="font-size:10px">Chờ</span>
+          </div>
+          <div class="fleet-item">
+            <div class="vehicle-id" style="color:var(--red)">51G-234</div>
+            <div class="vehicle-info">
+              <div class="vehicle-driver">Phạm Văn D</div>
+              <div class="vehicle-route">Báo hỏng — KV Thủ Đức</div>
+            </div>
+            <div class="fuel-bar">
+              <div class="fuel-label"><span>Nhiên liệu</span><span>22%</span></div>
+              <div class="fuel-track"><div class="fuel-fill low" style="width:22%"></div></div>
+            </div>
+            <span class="status-badge issue" style="font-size:10px">Sự cố</span>
+          </div>
+          <div class="fleet-item">
+            <div class="vehicle-id" style="color:var(--green)">51H-567</div>
+            <div class="vehicle-info">
+              <div class="vehicle-driver">Hoàng Văn E</div>
+              <div class="vehicle-route">HCM → Đồng Nai</div>
+            </div>
+            <div class="fuel-bar">
+              <div class="fuel-label"><span>Nhiên liệu</span><span>61%</span></div>
+              <div class="fuel-track"><div class="fuel-fill mid" style="width:61%"></div></div>
+            </div>
+            <span class="status-badge moving" style="font-size:10px">Chạy</span>
+          </div>
+          <div class="fleet-item">
+            <div class="vehicle-id" style="color:var(--muted)">51K-890</div>
+            <div class="vehicle-info">
+              <div class="vehicle-driver">Vũ Văn F</div>
+              <div class="vehicle-route">Nghỉ — Bảo dưỡng định kỳ</div>
+            </div>
+            <div class="fuel-bar">
+              <div class="fuel-label"><span>Nhiên liệu</span><span>—</span></div>
+              <div class="fuel-track"><div class="fuel-fill" style="width:0%"></div></div>
+            </div>
+            <span class="status-badge" style="font-size:10px; background:var(--surface2); color:var(--muted)">Nghỉ</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BOTTOM ROW -->
+    <div class="grid-3">
+
+      <!-- REVENUE CHART -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📈 Doanh thu 7 ngày</div>
+          <div style="display:flex;gap:8px">
+            <span style="font-size:11px;color:var(--muted2);display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:var(--accent);border-radius:2px;display:inline-block"></span>Doanh thu</span>
+            <span style="font-size:11px;color:var(--muted2);display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:var(--accent2);opacity:0.5;border-radius:2px;display:inline-block"></span>Chi phí</span>
+          </div>
+        </div>
+        <div class="chart-bars">
+          <div class="bar-group"><div class="bar primary" style="height:55px"></div><div class="bar secondary" style="height:32px"></div></div>
+          <div class="bar-group"><div class="bar primary" style="height:45px"></div><div class="bar secondary" style="height:28px"></div></div>
+          <div class="bar-group"><div class="bar primary" style="height:65px"></div><div class="bar secondary" style="height:38px"></div></div>
+          <div class="bar-group"><div class="bar primary" style="height:50px"></div><div class="bar secondary" style="height:30px"></div></div>
+          <div class="bar-group"><div class="bar primary" style="height:72px"></div><div class="bar secondary" style="height:42px"></div></div>
+          <div class="bar-group"><div class="bar primary" style="height:60px"></div><div class="bar secondary" style="height:35px"></div></div>
+          <div class="bar-group"><div class="bar primary" style="height:80px"></div><div class="bar secondary" style="height:46px"></div></div>
+        </div>
+        <div class="chart-labels">
+          <div class="chart-label">T2</div>
+          <div class="chart-label">T3</div>
+          <div class="chart-label">T4</div>
+          <div class="chart-label">T5</div>
+          <div class="chart-label">T6</div>
+          <div class="chart-label">T7</div>
+          <div class="chart-label">CN</div>
+        </div>
+        <div style="padding: 0 20px 16px; display:flex; gap:16px;">
+          <div>
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase">Tổng tuần</div>
+            <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--green)">427M đ</div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase">Lợi nhuận</div>
+            <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700">178M đ</div>
+          </div>
+          <div style="margin-left:auto;text-align:right">
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase">Margin</div>
+            <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--accent)">41.7%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DRIVER RANKING -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🏆 Tài xế xuất sắc</div>
+          <div class="card-action">Xem tất cả</div>
+        </div>
+        <div>
+          <div class="driver-item">
+            <div class="driver-avatar" style="background:linear-gradient(135deg,#f97316,#fb923c)">A</div>
+            <div>
+              <div class="driver-name">Nguyễn Văn A</div>
+              <div class="driver-trips">24 chuyến • 2,840 km</div>
+            </div>
+            <div class="driver-score a">A+</div>
+          </div>
+          <div class="driver-item">
+            <div class="driver-avatar" style="background:linear-gradient(135deg,#3b82f6,#60a5fa)">B</div>
+            <div>
+              <div class="driver-name">Trần Văn B</div>
+              <div class="driver-trips">21 chuyến • 2,510 km</div>
+            </div>
+            <div class="driver-score a">A</div>
+          </div>
+          <div class="driver-item">
+            <div class="driver-avatar" style="background:linear-gradient(135deg,#22c55e,#4ade80)">C</div>
+            <div>
+              <div class="driver-name">Lê Thị C</div>
+              <div class="driver-trips">19 chuyến • 2,200 km</div>
+            </div>
+            <div class="driver-score a">A</div>
+          </div>
+          <div class="driver-item">
+            <div class="driver-avatar" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa)">D</div>
+            <div>
+              <div class="driver-name">Phạm Văn D</div>
+              <div class="driver-trips">16 chuyến • 1,980 km</div>
+            </div>
+            <div class="driver-score b">B+</div>
+          </div>
+          <div class="driver-item">
+            <div class="driver-avatar" style="background:linear-gradient(135deg,#64748b,#94a3b8)">E</div>
+            <div>
+              <div class="driver-name">Hoàng Văn E</div>
+              <div class="driver-trips">14 chuyến • 1,650 km</div>
+            </div>
+            <div class="driver-score b">B</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALERTS -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🔔 Cảnh báo & Thông báo</div>
+          <div class="card-action">Xem tất cả</div>
+        </div>
+        <div>
+          <div class="alert-item">
+            <div class="alert-icon error">🚨</div>
+            <div>
+              <div class="alert-text"><strong>Xe 51G-234 báo hỏng</strong> — Khu vực Thủ Đức. Cần hỗ trợ ngay.</div>
+              <div class="alert-time">5 phút trước</div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-icon warn">⛽</div>
+            <div>
+              <div class="alert-text"><strong>Xe 51D-456 sắp hết nhiên liệu</strong> — Còn 45%, cần đổ trước 15h.</div>
+              <div class="alert-time">18 phút trước</div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-icon warn">📅</div>
+            <div>
+              <div class="alert-text"><strong>3 xe đến hạn đăng kiểm</strong> — Trong vòng 7 ngày tới.</div>
+              <div class="alert-time">1 giờ trước</div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-icon info">📦</div>
+            <div>
+              <div class="alert-text"><strong>12 đơn hàng mới</strong> — Đang chờ phân công tài xế & xe.</div>
+              <div class="alert-time">2 giờ trước</div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-icon info">💰</div>
+            <div>
+              <div class="alert-text"><strong>Hóa đơn #INV-089</strong> — Khách hàng Công ty ABC đã thanh toán 45M đ.</div>
+              <div class="alert-time">3 giờ trước</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script>
+  const dashboardPeriods = {
+    today: {
+      stats: [
+        { label: "Chuyến hôm nay", value: "47", change: "▲ 12% so với hôm qua", trend: "up" },
+        { label: "Xe đang chạy", value: "23", change: "▲ 3 xe so với 8h trước", trend: "up" },
+        { label: "Doanh thu hôm nay", value: "84.2M", change: "▲ 8.4% so với hôm qua", trend: "up" },
+        { label: "Đơn chờ xử lý", value: "12", change: "▼ Cần duyệt ngay", trend: "down" }
+      ],
+      trips: [
+        { id: "VT-2401", route: "HCM → Bình Dương", driver: "Nguyễn Văn A", vehicle: "51C-123.45", status: "moving", text: "Đang chạy", eta: "14:30" },
+        { id: "VT-2402", route: "HCM → Long An", driver: "Trần Văn B", vehicle: "51D-456.78", status: "moving", text: "Đang chạy", eta: "15:15" },
+        { id: "VT-2403", route: "HCM → Đồng Nai", driver: "Lê Thị C", vehicle: "51E-789.01", status: "done", text: "Đã giao", eta: "13:45" },
+        { id: "VT-2404", route: "HCM → Tây Ninh", driver: "Phạm Văn D", vehicle: "51G-234.56", status: "wait", text: "Chờ hàng", eta: "16:00" },
+        { id: "VT-2405", route: "HCM → Vũng Tàu", driver: "Hoàng Văn E", vehicle: "51H-567.89", status: "issue", text: "Sự cố", eta: "—" }
+      ],
+      chart: {
+        revenue: [55, 45, 65, 50, 72, 60, 80],
+        cost: [32, 28, 38, 30, 42, 35, 46],
+        labels: ["T2", "T3", "T4", "T5", "T6", "T7", "CN"],
+        total: "427M đ",
+        profit: "178M đ",
+        margin: "41.7%"
+      }
+    },
+    week: {
+      stats: [
+        { label: "Chuyến tuần này", value: "312", change: "▲ 9% so với tuần trước", trend: "up" },
+        { label: "Xe hoạt động TB", value: "26", change: "▲ 4 xe so với tuần trước", trend: "up" },
+        { label: "Doanh thu tuần", value: "612M", change: "▲ 14.2% so với tuần trước", trend: "up" },
+        { label: "Đơn tồn", value: "28", change: "▼ Giảm 6 đơn tồn", trend: "down" }
+      ],
+      trips: [
+        { id: "VT-2338", route: "HCM → Cần Thơ", driver: "Nguyễn Văn A", vehicle: "51C-123.45", status: "done", text: "Đã giao", eta: "Hoàn tất" },
+        { id: "VT-2340", route: "HCM → Long An", driver: "Trần Văn B", vehicle: "51D-456.78", status: "moving", text: "Đang chạy", eta: "17:10" },
+        { id: "VT-2344", route: "HCM → Bình Dương", driver: "Lê Thị C", vehicle: "51E-789.01", status: "moving", text: "Đang chạy", eta: "18:00" },
+        { id: "VT-2349", route: "HCM → Tây Ninh", driver: "Phạm Văn D", vehicle: "51G-234.56", status: "wait", text: "Chờ hàng", eta: "19:00" },
+        { id: "VT-2351", route: "HCM → Vũng Tàu", driver: "Hoàng Văn E", vehicle: "51H-567.89", status: "issue", text: "Sự cố", eta: "—" }
+      ],
+      chart: {
+        revenue: [68, 72, 75, 88, 92, 84, 79],
+        cost: [36, 38, 40, 49, 52, 45, 43],
+        labels: ["W1", "W2", "W3", "W4", "W5", "W6", "W7"],
+        total: "612M đ",
+        profit: "289M đ",
+        margin: "47.2%"
+      }
+    },
+    month: {
+      stats: [
+        { label: "Chuyến tháng này", value: "1,284", change: "▲ 18% so với tháng trước", trend: "up" },
+        { label: "Xe hoạt động", value: "31", change: "▲ 6 xe so với tháng trước", trend: "up" },
+        { label: "Doanh thu tháng", value: "2.48B", change: "▲ 21.5% so với tháng trước", trend: "up" },
+        { label: "Đơn tồn tháng", value: "64", change: "▼ Giảm 19 đơn tồn", trend: "down" }
+      ],
+      trips: [
+        { id: "VT-2201", route: "HCM → Đà Nẵng", driver: "Nguyễn Văn A", vehicle: "51C-123.45", status: "done", text: "Đã giao", eta: "Hoàn tất" },
+        { id: "VT-2219", route: "HCM → Nha Trang", driver: "Trần Văn B", vehicle: "51D-456.78", status: "done", text: "Đã giao", eta: "Hoàn tất" },
+        { id: "VT-2247", route: "HCM → Cần Thơ", driver: "Lê Thị C", vehicle: "51E-789.01", status: "moving", text: "Đang chạy", eta: "20:20" },
+        { id: "VT-2261", route: "HCM → Bình Phước", driver: "Phạm Văn D", vehicle: "51G-234.56", status: "wait", text: "Chờ hàng", eta: "21:00" },
+        { id: "VT-2280", route: "HCM → Vũng Tàu", driver: "Hoàng Văn E", vehicle: "51H-567.89", status: "issue", text: "Sự cố", eta: "—" }
+      ],
+      chart: {
+        revenue: [90, 102, 110, 124, 138, 132, 145],
+        cost: [48, 54, 59, 68, 72, 69, 76],
+        labels: ["T1", "T2", "T3", "T4", "T5", "T6", "T7"],
+        total: "2.48B đ",
+        profit: "1.03B đ",
+        margin: "41.5%"
+      }
+    }
+  };
+
+  function setDashboardPeriod(period, clickedPill) {
+    const data = dashboardPeriods[period];
+    if (!data) return;
+
+    document.querySelectorAll(".nav-pill").forEach(p => p.classList.remove("active"));
+    if (clickedPill) clickedPill.classList.add("active");
+
+    const statCards = document.querySelectorAll(".stats-row .stat-card");
+    data.stats.forEach((s, i) => {
+      const card = statCards[i];
+      if (!card) return;
+      const labelEl = card.querySelector(".stat-label");
+      const valueEl = card.querySelector(".stat-value");
+      const changeEl = card.querySelector(".stat-change");
+      if (labelEl) labelEl.textContent = s.label;
+      if (valueEl) valueEl.textContent = s.value;
+      if (changeEl) {
+        changeEl.textContent = s.change;
+        changeEl.classList.remove("up", "down");
+        changeEl.classList.add(s.trend);
+      }
+    });
+
+    const tbody = document.querySelector(".map-card table tbody");
+    if (tbody) {
+      tbody.innerHTML = data.trips.map((t) => `
+        <tr>
+          <td><span class="order-id">#${t.id}</span></td>
+          <td>${t.route}</td>
+          <td>${t.driver}</td>
+          <td>${t.vehicle}</td>
+          <td><span class="status-badge ${t.status}"><span class="status-dot"></span>${t.text}</span></td>
+          <td>${t.eta}</td>
+        </tr>
+      `).join("");
+    }
+
+    const revenueBars = document.querySelectorAll(".chart-bars .bar.primary");
+    const costBars = document.querySelectorAll(".chart-bars .bar.secondary");
+    data.chart.revenue.forEach((val, i) => {
+      if (revenueBars[i]) revenueBars[i].style.height = `${val}px`;
+      if (costBars[i]) costBars[i].style.height = `${data.chart.cost[i]}px`;
+    });
+
+    const labels = document.querySelectorAll(".chart-labels .chart-label");
+    data.chart.labels.forEach((label, i) => {
+      if (!labels[i]) return;
+      labels[i].textContent = label;
+      labels[i].style.color = i === data.chart.labels.length - 1 ? "var(--accent)" : "var(--muted)";
+    });
+
+    const summaryWrap = document.querySelector(".chart-labels + div");
+    if (summaryWrap) {
+      const blocks = summaryWrap.querySelectorAll("div > div:last-child");
+      if (blocks[0]) blocks[0].textContent = data.chart.total;
+      if (blocks[1]) blocks[1].textContent = data.chart.profit;
+      if (blocks[2]) blocks[2].textContent = data.chart.margin;
+    }
+  }
+</script>
+</body>
+</html>

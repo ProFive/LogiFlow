@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LogiFlow — Driver App Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #0f0f14;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  color: #fff;
+}
+
+h1 {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.desc {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+/* SCREEN TABS */
+.screen-tabs {
+  display: flex;
+  gap: 6px;
+  background: #1a1a22;
+  border-radius: 14px;
+  padding: 5px;
+  margin-bottom: 40px;
+}
+
+.screen-tab {
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.screen-tab.active {
+  background: #ff6b2b;
+  color: #fff;
+}
+
+/* PHONES CONTAINER */
+.phones {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* PHONE FRAME */
+.phone {
+  width: 340px;
+  flex-shrink: 0;
+}
+
+.phone-label {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #444;
+  margin-bottom: 14px;
+}
+
+.phone-frame {
+  width: 340px;
+  background: #111118;
+  border-radius: 44px;
+  border: 2px solid #2a2a35;
+  padding: 12px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+  position: relative;
+}
+
+.phone-frame::before {
+  content: '';
+  position: absolute;
+  top: -2px; left: 50%;
+  transform: translateX(-50%);
+  width: 100px; height: 28px;
+  background: #111118;
+  border-radius: 0 0 20px 20px;
+  border: 2px solid #2a2a35;
+  border-top: none;
+  z-index: 10;
+}
+
+.phone-screen {
+  width: 100%;
+  border-radius: 34px;
+  overflow: hidden;
+  background: #f5f5f7;
+  min-height: 680px;
+  position: relative;
+}
+
+/* STATUS BAR */
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px 8px;
+  background: inherit;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status-time { color: inherit; }
+.status-icons { display: flex; gap: 4px; align-items: center; font-size: 12px; }
+
+/* ═══════════════════════════════════════
+   SCREEN 1 — HOME / DASHBOARD (DARK)
+═══════════════════════════════════════ */
+.screen-home {
+  background: #0d0d14;
+  color: #fff;
+  min-height: 680px;
+}
+
+.screen-home .status-bar { background: transparent; padding-top: 16px; }
+
+.home-hero {
+  padding: 8px 20px 24px;
+  position: relative;
+}
+
+.home-greeting {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+.home-name {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.online-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(34,197,94,0.12);
+  border: 1px solid rgba(34,197,94,0.3);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #22c55e;
+  margin-top: 8px;
+}
+
+.online-dot {
+  width: 6px; height: 6px;
+  background: #22c55e;
+  border-radius: 50%;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Trip card */
+.trip-card {
+  margin: 0 16px 16px;
+  background: linear-gradient(135deg, #ff6b2b 0%, #ff8c42 100%);
+  border-radius: 20px;
+  padding: 18px 18px 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.trip-card::before {
+  content: '';
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 100px; height: 100px;
+  border: 20px solid rgba(255,255,255,0.08);
+  border-radius: 50%;
+}
+
+.trip-card::after {
+  content: '';
+  position: absolute;
+  bottom: -30px; right: 20px;
+  width: 80px; height: 80px;
+  border: 15px solid rgba(255,255,255,0.06);
+  border-radius: 50%;
+}
+
+.trip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.trip-badge {
+  background: rgba(255,255,255,0.2);
+  border-radius: 8px;
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.trip-id {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.trip-route {
+  margin-bottom: 14px;
+}
+
+.route-point {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.route-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.route-dot.from { background: rgba(255,255,255,0.9); }
+.route-dot.to { background: #fff; }
+
+.route-line {
+  width: 2px;
+  height: 14px;
+  background: rgba(255,255,255,0.3);
+  margin-left: 3px;
+  margin: 4px 0 4px 3px;
+}
+
+.trip-footer {
+  display: flex;
+  gap: 14px;
+}
+
+.trip-meta {
+  font-size: 10px;
+  opacity: 0.7;
+  margin-bottom: 2px;
+}
+
+.trip-val {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.btn-navigate {
+  margin-left: auto;
+  background: rgba(255,255,255,0.95);
+  color: #ff6b2b;
+  border: none;
+  border-radius: 12px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  align-self: flex-end;
+  font-family: inherit;
+}
+
+/* Stats row */
+.stats-mini {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0 16px 16px;
+}
+
+.stat-mini {
+  background: #1a1a25;
+  border-radius: 14px;
+  padding: 12px;
+  border: 1px solid #252530;
+}
+
+.stat-mini-icon { font-size: 16px; margin-bottom: 6px; }
+.stat-mini-val {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 2px;
+}
+.stat-mini-label { font-size: 9px; color: #555; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Recent trips */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 16px 10px;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.section-link {
+  font-size: 11px;
+  color: #ff6b2b;
+  font-weight: 600;
+}
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #1a1a25;
+}
+
+.recent-item:last-child { border-bottom: none; }
+
+.recent-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.recent-icon.done { background: rgba(34,197,94,0.12); }
+.recent-icon.cancel { background: rgba(239,68,68,0.12); }
+
+.recent-info { flex: 1; }
+.recent-route { font-size: 12px; font-weight: 600; }
+.recent-time { font-size: 10px; color: #555; margin-top: 1px; }
+.recent-amount { font-size: 13px; font-weight: 700; color: #22c55e; }
+
+/* Bottom Nav */
+.bottom-nav {
+  display: flex;
+  background: #111118;
+  border-top: 1px solid #1e1e28;
+  padding: 10px 0 20px;
+}
+
+.nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.nav-btn-icon { font-size: 20px; }
+.nav-btn-label { font-size: 9px; font-weight: 600; color: #444; letter-spacing: 0.3px; }
+.nav-btn.active .nav-btn-label { color: #ff6b2b; }
+.nav-btn.active .nav-btn-icon { filter: drop-shadow(0 0 4px rgba(255,107,43,0.5)); }
+
+/* ═══════════════════════════════════════
+   SCREEN 2 — ACTIVE TRIP (LIGHT/MAP)
+═══════════════════════════════════════ */
+.screen-trip {
+  background: #f0f4f8;
+  color: #111;
+  min-height: 680px;
+}
+
+.screen-trip .status-bar { background: transparent; color: #111; }
+
+/* Map area */
+.map-area {
+  position: relative;
+  height: 320px;
+  background: #dce8f0;
+  overflow: hidden;
+}
+
+/* Fake map */
+.map-area::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(180,200,220,0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,200,220,0.4) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+.map-roads {
+  position: absolute; inset: 0;
+}
+
+.mroad {
+  position: absolute;
+  background: #c5d8e8;
+}
+.mroad.h { height: 14px; border-radius: 2px; }
+.mroad.v { width: 14px; border-radius: 2px; }
+.mroad.main { background: #b0c8dc; }
+
+/* Route path SVG-like using div */
+.route-path {
+  position: absolute;
+  top: 60px; left: 60px;
+  width: 200px; height: 180px;
+  border: 3px solid #ff6b2b;
+  border-radius: 20px 20px 0 20px;
+  border-bottom: none;
+  border-left: none;
+}
+
+.route-path-2 {
+  position: absolute;
+  top: 160px; left: 200px;
+  width: 80px; height: 80px;
+  border: 3px solid #ff6b2b;
+  border-radius: 0 0 0 20px;
+  border-top: none;
+  border-right: none;
+}
+
+.my-location {
+  position: absolute;
+  bottom: 110px; left: 54px;
+  width: 40px; height: 40px;
+}
+
+.my-location-pulse {
+  position: absolute; inset: 0;
+  background: rgba(255,107,43,0.15);
+  border-radius: 50%;
+  animation: locpulse 2s infinite;
+}
+
+@keyframes locpulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0; }
+}
+
+.my-location-dot {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px; height: 16px;
+  background: #ff6b2b;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(255,107,43,0.5);
+}
+
+.dest-pin {
+  position: absolute;
+  top: 40px; right: 40px;
+  font-size: 28px;
+  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3));
+}
+
+/* ETA bar */
+.eta-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: #fff;
+  border-radius: 20px 20px 0 0;
+  padding: 14px 18px 10px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+}
+
+.eta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.eta-time {
+  font-size: 26px;
+  font-weight: 800;
+  color: #111;
+  letter-spacing: -1px;
+}
+
+.eta-label { font-size: 10px; color: #888; font-weight: 500; }
+
+.eta-meta {
+  text-align: right;
+}
+
+.eta-dist { font-size: 15px; font-weight: 700; color: #ff6b2b; }
+.eta-arrive { font-size: 10px; color: #888; }
+
+/* Progress bar */
+.progress-track {
+  height: 4px;
+  background: #e8edf2;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff6b2b, #ff8c42);
+  border-radius: 2px;
+  width: 62%;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 9px;
+  color: #aaa;
+  font-weight: 500;
+}
+
+/* Trip sheet */
+.trip-sheet {
+  background: #fff;
+  margin: 10px 14px;
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.trip-sheet-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 14px;
+}
+
+.waypoint {
+  display: flex;
+  gap: 12px;
+  position: relative;
+}
+
+.waypoint:not(:last-child) {
+  padding-bottom: 16px;
+}
+
+.wp-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+}
+
+.wp-circle {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 2px solid;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.wp-circle.done { border-color: #22c55e; background: rgba(34,197,94,0.1); color: #22c55e; }
+.wp-circle.current { border-color: #ff6b2b; background: rgba(255,107,43,0.1); color: #ff6b2b; }
+.wp-circle.next { border-color: #ccc; color: #ccc; }
+
+.wp-connector {
+  width: 2px;
+  flex: 1;
+  min-height: 20px;
+  background: #e8edf2;
+  margin: 3px 0;
+}
+
+.wp-info { flex: 1; }
+.wp-address { font-size: 13px; font-weight: 600; color: #111; line-height: 1.3; }
+.wp-sub { font-size: 11px; color: #888; margin-top: 2px; }
+.wp-tag {
+  display: inline-block;
+  background: rgba(255,107,43,0.1);
+  color: #ff6b2b;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  margin-top: 4px;
+}
+
+/* Action buttons */
+.trip-actions {
+  display: flex;
+  gap: 10px;
+  padding: 0 14px 10px;
+}
+
+.btn-action {
+  flex: 1;
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+.btn-action.primary {
+  background: linear-gradient(135deg, #ff6b2b, #ff8c42);
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(255,107,43,0.35);
+}
+
+.btn-action.secondary {
+  background: #f0f4f8;
+  color: #444;
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 3 — COD / PAYMENT
+═══════════════════════════════════════ */
+.screen-cod {
+  background: #fff;
+  color: #111;
+  min-height: 680px;
+}
+
+.screen-cod .status-bar { color: #111; }
+
+.cod-header {
+  background: linear-gradient(160deg, #111118 0%, #1a1a28 100%);
+  padding: 8px 20px 28px;
+  color: #fff;
+}
+
+.cod-title {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: -0.3px;
+}
+
+.cod-amount-card {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 18px;
+  padding: 16px 20px;
+}
+
+.cod-label { font-size: 11px; color: #666; margin-bottom: 4px; }
+.cod-amount {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #ff6b2b;
+  margin-bottom: 6px;
+}
+
+.cod-order { font-size: 11px; color: #555; }
+
+/* Payment methods */
+.pay-section {
+  padding: 18px 16px 0;
+}
+
+.pay-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 12px;
+}
+
+.pay-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #f8f9fb;
+  border-radius: 14px;
+  margin-bottom: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pay-option.selected {
+  border-color: #ff6b2b;
+  background: rgba(255,107,43,0.04);
+}
+
+.pay-icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+
+.pay-icon.cash { background: rgba(34,197,94,0.12); }
+.pay-icon.transfer { background: rgba(59,130,246,0.12); }
+.pay-icon.qr { background: rgba(139,92,246,0.12); }
+
+.pay-info { flex: 1; }
+.pay-name { font-size: 14px; font-weight: 600; }
+.pay-desc { font-size: 11px; color: #888; margin-top: 1px; }
+
+.pay-check {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+}
+
+.pay-check.checked {
+  background: #ff6b2b;
+  border-color: #ff6b2b;
+  color: #fff;
+}
+
+/* Customer signature */
+.sig-section {
+  padding: 16px 16px 0;
+}
+
+.sig-box {
+  background: #f8f9fb;
+  border: 2px dashed #ddd;
+  border-radius: 14px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.sig-icon { font-size: 22px; }
+.sig-label { font-size: 11px; color: #aaa; font-weight: 500; }
+
+/* Photos */
+.photos-row {
+  display: flex;
+  gap: 8px;
+  padding: 14px 16px 0;
+}
+
+.photo-thumb {
+  width: 68px; height: 68px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.photo-thumb-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+.photo-add {
+  width: 68px; height: 68px;
+  border-radius: 12px;
+  background: #f8f9fb;
+  border: 2px dashed #ddd;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #ccc;
+}
+
+.photo-add span { font-size: 9px; color: #bbb; font-weight: 600; }
+
+.photo-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+}
+
+.p1 { background: #dce8f5; }
+.p2 { background: #ddf0e4; }
+
+.confirm-btn {
+  margin: 16px;
+  background: linear-gradient(135deg, #ff6b2b, #ff8c42);
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  width: calc(100% - 32px);
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 8px 24px rgba(255,107,43,0.35);
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 4 — EARNINGS / STATS
+═══════════════════════════════════════ */
+.screen-earn {
+  background: #0d0d14;
+  color: #fff;
+  min-height: 680px;
+}
+
+.screen-earn .status-bar { background: transparent; }
+
+.earn-header {
+  padding: 8px 20px 20px;
+}
+
+.earn-title {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 16px;
+}
+
+/* Period pills */
+.period-pills {
+  display: flex;
+  background: #1a1a22;
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
+.period-pill {
+  flex: 1;
+  text-align: center;
+  padding: 7px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+}
+
+.period-pill.active {
+  background: #ff6b2b;
+  color: #fff;
+}
+
+/* Big earn number */
+.earn-big {
+  background: linear-gradient(135deg, #1a1a25, #222230);
+  border-radius: 20px;
+  padding: 20px;
+  border: 1px solid #252535;
+  margin-bottom: 12px;
+}
+
+.earn-big-label { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.earn-big-amount {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #ff6b2b;
+  margin-bottom: 4px;
+}
+
+.earn-big-change {
+  font-size: 12px;
+  color: #22c55e;
+}
+
+.earn-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 16px 14px;
+}
+
+.earn-mini {
+  background: #1a1a22;
+  border-radius: 14px;
+  padding: 14px;
+  border: 1px solid #252530;
+}
+
+.earn-mini-val {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 3px;
+  letter-spacing: -0.5px;
+}
+
+.earn-mini-label { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Chart */
+.earn-chart {
+  padding: 0 16px 14px;
+}
+
+.chart-title { font-size: 12px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 90px;
+}
+
+.ec-bar {
+  flex: 1;
+  border-radius: 5px 5px 0 0;
+  background: #1e1e2a;
+  transition: all 0.3s;
+  cursor: pointer;
+  min-width: 14px;
+}
+
+.ec-bar.active { background: #ff6b2b; }
+.ec-bar:hover { opacity: 0.8; }
+
+.ec-labels {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.ec-label {
+  flex: 1;
+  text-align: center;
+  font-size: 8px;
+  color: #444;
+  font-weight: 600;
+}
+
+/* Trip history */
+.trip-history {
+  padding: 0 16px;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #1a1a22;
+}
+
+.history-item:last-child { border-bottom: none; }
+
+.hist-icon {
+  width: 38px; height: 38px;
+  border-radius: 11px;
+  background: #1a1a22;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.hist-info { flex: 1; }
+.hist-route { font-size: 13px; font-weight: 600; }
+.hist-time { font-size: 10px; color: #555; margin-top: 1px; }
+.hist-amt { font-size: 14px; font-weight: 700; color: #22c55e; }
+.hist-km { font-size: 10px; color: #555; text-align: right; }
+
+/* ========== SCREEN VISIBILITY ========== */
+.screens-wrap { position: relative; }
+
+.screen-panel { display: none; }
+.screen-panel.visible { display: block; }
+
+/* DOTS */
+.phone-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #333;
+  transition: all 0.2s;
+}
+.dot.active {
+  background: #ff6b2b;
+  width: 18px;
+  border-radius: 3px;
+}
+
+/* Notification popup */
+.notif-popup {
+  position: absolute;
+  top: 80px; left: 14px; right: 14px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideDown 0.3s ease;
+  z-index: 20;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.notif-icon-wrap {
+  width: 36px; height: 36px;
+  background: #fff3ec;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.notif-text { flex: 1; }
+.notif-title { font-size: 12px; font-weight: 700; color: #111; }
+.notif-body { font-size: 10px; color: #888; margin-top: 1px; }
+.notif-time { font-size: 9px; color: #bbb; }
+</style>
+</head>
+<body>
+
+<h1>LogiFlow</h1>
+<div class="subtitle">Driver App — Mobile Mockup</div>
+<div class="desc">Nhấn vào tab bên dưới để xem các màn hình khác nhau</div>
+
+<!-- SCREEN TABS -->
+<div class="screen-tabs">
+  <div class="screen-tab active" onclick="showScreen(0)">🏠 Trang chủ</div>
+  <div class="screen-tab" onclick="showScreen(1)">🗺️ Đang chạy</div>
+  <div class="screen-tab" onclick="showScreen(2)">💵 Thu COD</div>
+  <div class="screen-tab" onclick="showScreen(3)">📊 Thu nhập</div>
+</div>
+
+<!-- PHONES -->
+<div class="phones">
+  <div class="phone">
+    <div class="phone-label" id="phone-label">Màn hình chính</div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+
+        <!-- SCREEN 0: HOME -->
+        <div class="screen-panel screen-home visible" id="screen-0">
+          <div class="status-bar">
+            <span class="status-time">9:41</span>
+            <span class="status-icons">📶 🔋</span>
+          </div>
+
+          <!-- Notification popup -->
+          <div class="notif-popup">
+            <div class="notif-icon-wrap">📦</div>
+            <div class="notif-text">
+              <div class="notif-title">Đơn hàng mới!</div>
+              <div class="notif-body">HCM → Bình Dương · 45.2km · 280.000đ</div>
+            </div>
+            <div class="notif-time">Vừa xong</div>
+          </div>
+
+          <div class="home-hero">
+            <div class="home-greeting">Xin chào,</div>
+            <div class="home-name">Nguyễn Văn A 👋</div>
+            <div class="online-pill">
+              <div class="online-dot"></div>
+              Đang trực tuyến
+            </div>
+          </div>
+
+          <!-- Active trip card -->
+          <div class="trip-card">
+            <div class="trip-header">
+              <span class="trip-badge">🚚 ĐANG CHẠY</span>
+              <span class="trip-id">#VT-2401</span>
+            </div>
+            <div class="trip-route">
+              <div class="route-point">
+                <div class="route-dot from"></div>
+                <span>Quận 1, TP.HCM</span>
+              </div>
+              <div class="route-line"></div>
+              <div class="route-point">
+                <div class="route-dot to"></div>
+                <span>KCN Mỹ Phước, Bình Dương</span>
+              </div>
+            </div>
+            <div class="trip-footer">
+              <div>
+                <div class="trip-meta">Quãng đường</div>
+                <div class="trip-val">45.2 km</div>
+              </div>
+              <div>
+                <div class="trip-meta">Thu nhập</div>
+                <div class="trip-val">280K đ</div>
+              </div>
+              <button class="btn-navigate">🧭 Dẫn đường</button>
+            </div>
+          </div>
+
+          <!-- Mini stats -->
+          <div class="stats-mini">
+            <div class="stat-mini">
+              <div class="stat-mini-icon">🚚</div>
+              <div class="stat-mini-val">7</div>
+              <div class="stat-mini-label">Chuyến hôm nay</div>
+            </div>
+            <div class="stat-mini">
+              <div class="stat-mini-icon">💰</div>
+              <div class="stat-mini-val">1.4M</div>
+              <div class="stat-mini-label">Thu nhập hôm nay</div>
+            </div>
+            <div class="stat-mini">
+              <div class="stat-mini-icon">⭐</div>
+              <div class="stat-mini-val">4.9</div>
+              <div class="stat-mini-label">Đánh giá</div>
+            </div>
+          </div>
+
+          <!-- Recent -->
+          <div class="section-header">
+            <div class="section-title">Chuyến gần đây</div>
+            <div class="section-link">Xem tất cả</div>
+          </div>
+
+          <div class="recent-item">
+            <div class="recent-icon done">✅</div>
+            <div class="recent-info">
+              <div class="recent-route">Quận 7 → Long An</div>
+              <div class="recent-time">09:15 — 11:30 • 38.4km</div>
+            </div>
+            <div class="recent-amount">+420K</div>
+          </div>
+
+          <div class="recent-item">
+            <div class="recent-icon done">✅</div>
+            <div class="recent-info">
+              <div class="recent-route">Thủ Đức → Đồng Nai</div>
+              <div class="recent-time">07:00 — 08:45 • 24.1km</div>
+            </div>
+            <div class="recent-amount">+280K</div>
+          </div>
+
+          <div class="recent-item">
+            <div class="recent-icon cancel">❌</div>
+            <div class="recent-info">
+              <div class="recent-route">Quận 9 → Bình Dương</div>
+              <div class="recent-time">Hủy bởi khách hàng</div>
+            </div>
+            <div class="recent-amount" style="color:#ef4444">–0đ</div>
+          </div>
+
+          <!-- Bottom Nav -->
+          <div class="bottom-nav">
+            <div class="nav-btn active">
+              <div class="nav-btn-icon">🏠</div>
+              <div class="nav-btn-label" style="color:#ff6b2b">Trang chủ</div>
+            </div>
+            <div class="nav-btn">
+              <div class="nav-btn-icon">🗺️</div>
+              <div class="nav-btn-label">Bản đồ</div>
+            </div>
+            <div class="nav-btn">
+              <div class="nav-btn-icon">📦</div>
+              <div class="nav-btn-label">Đơn hàng</div>
+            </div>
+            <div class="nav-btn">
+              <div class="nav-btn-icon">💰</div>
+              <div class="nav-btn-label">Thu nhập</div>
+            </div>
+            <div class="nav-btn">
+              <div class="nav-btn-icon">👤</div>
+              <div class="nav-btn-label">Hồ sơ</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCREEN 1: ACTIVE TRIP / MAP -->
+        <div class="screen-panel screen-trip" id="screen-1">
+          <div class="status-bar">
+            <span class="status-time" style="color:#111">9:41</span>
+            <span class="status-icons" style="color:#111">📶 🔋</span>
+          </div>
+
+          <div class="map-area">
+            <div class="map-roads">
+              <div class="mroad h main" style="top:40%;left:0;width:100%"></div>
+              <div class="mroad h" style="top:65%;left:0;width:100%"></div>
+              <div class="mroad v main" style="left:30%;top:0;height:100%"></div>
+              <div class="mroad v" style="left:65%;top:0;height:100%"></div>
+            </div>
+            <div class="route-path"></div>
+            <div class="route-path-2"></div>
+            <div class="dest-pin">📍</div>
+
+            <div class="my-location">
+              <div class="my-location-pulse"></div>
+              <div class="my-location-dot"></div>
+            </div>
+
+            <!-- ETA floating bar -->
+            <div class="eta-bar">
+              <div class="eta-row">
+                <div>
+                  <div class="eta-label">Còn lại</div>
+                  <div class="eta-time">23 phút</div>
+                </div>
+                <div class="eta-meta">
+                  <div class="eta-dist">18.3 km</div>
+                  <div class="eta-arrive">Đến nơi lúc 10:04</div>
+                </div>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill"></div>
+              </div>
+              <div class="progress-labels">
+                <span>Điểm xuất phát</span>
+                <span>62% hoàn thành</span>
+                <span>Điểm đến</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trip waypoints -->
+          <div class="trip-sheet">
+            <div class="trip-sheet-title">Lộ trình chuyến #VT-2401</div>
+
+            <div class="waypoint">
+              <div class="wp-left">
+                <div class="wp-circle done">✓</div>
+                <div class="wp-connector"></div>
+              </div>
+              <div class="wp-info">
+                <div class="wp-address">123 Nguyễn Huệ, Quận 1</div>
+                <div class="wp-sub">Lấy hàng lúc 08:30 · Đã hoàn thành</div>
+              </div>
+            </div>
+
+            <div class="waypoint">
+              <div class="wp-left">
+                <div class="wp-circle current">●</div>
+                <div class="wp-connector"></div>
+              </div>
+              <div class="wp-info">
+                <div class="wp-address">Cao tốc TP.HCM–Thủ Dầu Một</div>
+                <div class="wp-sub">Đang di chuyển</div>
+                <div class="wp-tag">🚦 Đang trên đường</div>
+              </div>
+            </div>
+
+            <div class="waypoint">
+              <div class="wp-left">
+                <div class="wp-circle next">○</div>
+              </div>
+              <div class="wp-info">
+                <div class="wp-address">KCN Mỹ Phước, Bình Dương</div>
+                <div class="wp-sub">Giao hàng · Dự kiến 10:04</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="trip-actions">
+            <button class="btn-action secondary">📞 Gọi KH</button>
+            <button class="btn-action secondary">⚠️ Báo sự cố</button>
+            <button class="btn-action primary">✅ Đã giao hàng</button>
+          </div>
+
+          <div class="bottom-nav" style="background:#f0f4f8; border-top:1px solid #e0e8f0">
+            <div class="nav-btn">
+              <div class="nav-btn-icon">🏠</div>
+              <div class="nav-btn-label">Trang chủ</div>
+            </div>
+            <div class="nav-btn active">
+              <div class="nav-btn-icon">🗺️</div>
+              <div class="nav-btn-label" style="color:#ff6b2b">Bản đồ</div>
+            </div>
+            <div class="nav-btn">
+              <div class="nav-btn-icon">📦</div>
+              <div class="nav-btn-label">Đơn hàng</div>
+            </div>
+            <div class="nav-btn">
+              <div class="nav-btn-icon">💰</div>
+              <div class="nav-btn-label">Thu nhập</div>
+            </div>
+            <div class="nav-btn">
+              <div class="nav-btn-icon">👤</div>
+              <div class="nav-btn-label">Hồ sơ</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCREEN 2: COD COLLECTION -->
+        <div class="screen-panel screen-cod" id="screen-2">
+          <div class="cod-header">
+            <div class="status-bar" style="color:#fff;padding:16px 0 0">
+              <span>9:41</span>
+              <span>📶 🔋</span>
+            </div>
+            <div class="cod-title">Thu tiền COD</div>
+            <div class="cod-amount-card">
+              <div class="cod-label">Số tiền cần thu</div>
+              <div class="cod-amount">1.250.000 đ</div>
+              <div class="cod-order">Đơn #VT-2401 · Công ty Thành Công</div>
+            </div>
+          </div>
+
+          <div class="pay-section">
+            <div class="pay-title">Hình thức thanh toán</div>
+
+            <div class="pay-option selected">
+              <div class="pay-icon cash">💵</div>
+              <div class="pay-info">
+                <div class="pay-name">Tiền mặt</div>
+                <div class="pay-desc">Thu trực tiếp từ khách hàng</div>
+              </div>
+              <div class="pay-check checked">✓</div>
+            </div>
+
+            <div class="pay-option">
+              <div class="pay-icon transfer">🏦</div>
+              <div class="pay-info">
+                <div class="pay-name">Chuyển khoản</div>
+                <div class="pay-desc">MB Bank · 0123456789</div>
+              </div>
+              <div class="pay-check"></div>
+            </div>
+
+            <div class="pay-option">
+              <div class="pay-icon qr">📱</div>
+              <div class="pay-info">
+                <div class="pay-name">Quét mã QR</div>
+                <div class="pay-desc">VietQR · Mọi ngân hàng</div>
+              </div>
+              <div class="pay-check"></div>
+            </div>
+          </div>
+
+          <div class="sig-section">
+            <div class="pay-title">Chữ ký xác nhận</div>
+            <div class="sig-box">
+              <div class="sig-icon">✍️</div>
+              <div class="sig-label">Khách hàng ký tại đây</div>
+            </div>
+          </div>
+
+          <div class="photos-row">
+            <div class="photo-thumb">
+              <div class="photo-placeholder p1">📷</div>
+            </div>
+            <div class="photo-thumb">
+              <div class="photo-placeholder p2">🖼️</div>
+            </div>
+            <div class="photo-add">
+              📷
+              <span>Thêm ảnh</span>
+            </div>
+          </div>
+
+          <button class="confirm-btn">✅ Xác nhận đã thu tiền</button>
+        </div>
+
+        <!-- SCREEN 3: EARNINGS -->
+        <div class="screen-panel screen-earn" id="screen-3">
+          <div class="status-bar">
+            <span class="status-time">9:41</span>
+            <span class="status-icons">📶 🔋</span>
+          </div>
+
+          <div class="earn-header">
+            <div class="earn-title">💰 Thu nhập của tôi</div>
+            <div class="period-pills">
+              <div class="period-pill">Hôm nay</div>
+              <div class="period-pill active">Tuần này</div>
+              <div class="period-pill">Tháng này</div>
+            </div>
+
+            <div class="earn-big">
+              <div class="earn-big-label">Tổng thu nhập tuần</div>
+              <div class="earn-big-amount">8.420.000 đ</div>
+              <div class="earn-big-change">▲ +18% so với tuần trước</div>
+            </div>
+          </div>
+
+          <div class="earn-grid">
+            <div class="earn-mini">
+              <div class="earn-mini-val">47</div>
+              <div class="earn-mini-label">Chuyến hoàn thành</div>
+            </div>
+            <div class="earn-mini">
+              <div class="earn-mini-val">1,240 km</div>
+              <div class="earn-mini-label">Tổng quãng đường</div>
+            </div>
+            <div class="earn-mini">
+              <div class="earn-mini-val" style="color:#22c55e">4.9 ⭐</div>
+              <div class="earn-mini-label">Điểm đánh giá</div>
+            </div>
+            <div class="earn-mini">
+              <div class="earn-mini-val" style="color:#ff6b2b">0</div>
+              <div class="earn-mini-label">Đơn bị hủy</div>
+            </div>
+          </div>
+
+          <!-- Bar chart -->
+          <div class="earn-chart">
+            <div class="chart-title">Thu nhập theo ngày</div>
+            <div class="bar-chart">
+              <div class="ec-bar" style="height:52px"></div>
+              <div class="ec-bar" style="height:38px"></div>
+              <div class="ec-bar" style="height:70px"></div>
+              <div class="ec-bar" style="height:45px"></div>
+              <div class="ec-bar" style="height:80px"></div>
+              <div class="ec-bar" style="height:58px"></div>
+              <div class="ec-bar active" style="height:90px"></div>
+            </div>
+            <div class="ec-labels">
+              <div class="ec-label">T2</div>
+              <div class="ec-label">T3</div>
+              <div class="ec-label">T4</div>
+              <div class="ec-label">T5</div>
+              <div class="ec-label">T6</div>
+              <div class="ec-label">T7</div>
+              <div class="ec-label" style="color:#ff6b2b">CN</div>
+            </div>
+          </div>
+
+          <!-- History -->
+          <div class="section-header">
+            <div class="section-title" style="color:#fff">Lịch sử chuyến</div>
+            <div class="section-link">Xem tất cả</div>
+          </div>
+
+          <div class="trip-history">
+            <div class="history-item">
+              <div class="hist-icon">🚚</div>
+              <div class="hist-info">
+                <div class="hist-route">Q1 → KCN Mỹ Phước</div>
+                <div class="hist-time">Hôm nay, 08:30 – 10:04</div>
+              </div>
+              <div>
+                <div class="hist-amt">+280K</div>
+                <div class="hist-km">45.2 km</div>
+              </div>
+            </div>
+            <div class="history-item">
+              <div class="hist-icon">🚚</div>
+              <div class="hist-info">
+                <div class="hist-route">Thủ Đức → Đồng Nai</div>
+                <div class="hist-time">Hôm nay, 06:00 – 08:15</div>
+              </div>
+              <div>
+                <div class="hist-amt">+350K</div>
+                <div class="hist-km">38.7 km</div>
+              </div>
+            </div>
+            <div class="history-item">
+              <div class="hist-icon">🚚</div>
+              <div class="hist-info">
+                <div class="hist-route">Q7 → Long An</div>
+                <div class="hist-time">Hôm qua, 14:20 – 16:40</div>
+              </div>
+              <div>
+                <div class="hist-amt">+420K</div>
+                <div class="hist-km">52.1 km</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-nav" style="background:#111118; border-top:1px solid #1e1e28">
+            <div class="nav-btn">
+              <div class="nav-btn-icon">🏠</div>
+              <div class="nav-btn-label">Trang chủ</div>
+            </div>
+            <div class="nav-btn">
+              <div class="nav-btn-icon">🗺️</div>
+              <div class="nav-btn-label">Bản đồ</div>
+            </div>
+            <div class="nav-btn">
+              <div class="nav-btn-icon">📦</div>
+              <div class="nav-btn-label">Đơn hàng</div>
+            </div>
+            <div class="nav-btn active">
+              <div class="nav-btn-icon">💰</div>
+              <div class="nav-btn-label" style="color:#ff6b2b">Thu nhập</div>
+            </div>
+            <div class="nav-btn">
+              <div class="nav-btn-icon">👤</div>
+              <div class="nav-btn-label">Hồ sơ</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- phone-screen -->
+    </div><!-- phone-frame -->
+
+    <div class="phone-dots">
+      <div class="dot active" id="dot-0"></div>
+      <div class="dot" id="dot-1"></div>
+      <div class="dot" id="dot-2"></div>
+      <div class="dot" id="dot-3"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Legend -->
+<div style="margin-top:40px;display:flex;gap:28px;flex-wrap:wrap;justify-content:center;">
+  <div style="text-align:center">
+    <div style="font-size:24px;margin-bottom:4px">🏠</div>
+    <div style="font-size:11px;color:#555;font-weight:600">Trang chủ</div>
+    <div style="font-size:10px;color:#333;">Dashboard tài xế</div>
+  </div>
+  <div style="text-align:center">
+    <div style="font-size:24px;margin-bottom:4px">🗺️</div>
+    <div style="font-size:11px;color:#555;font-weight:600">Đang chạy</div>
+    <div style="font-size:10px;color:#333;">GPS + lộ trình</div>
+  </div>
+  <div style="text-align:center">
+    <div style="font-size:24px;margin-bottom:4px">💵</div>
+    <div style="font-size:11px;color:#555;font-weight:600">Thu COD</div>
+    <div style="font-size:10px;color:#333;">Thanh toán + ký nhận</div>
+  </div>
+  <div style="text-align:center">
+    <div style="font-size:24px;margin-bottom:4px">📊</div>
+    <div style="font-size:11px;color:#555;font-weight:600">Thu nhập</div>
+    <div style="font-size:10px;color:#333;">Thống kê & lịch sử</div>
+  </div>
+</div>
+
+<script>
+const labels = ['Màn hình chính', 'Bản đồ thời gian thực', 'Thu tiền COD', 'Thống kê thu nhập'];
+const tabs = document.querySelectorAll('.screen-tab');
+
+function showScreen(idx) {
+  document.querySelectorAll('.screen-panel').forEach(p => p.classList.remove('visible'));
+  document.querySelectorAll('.dot').forEach((d,i) => {
+    d.classList.toggle('active', i === idx);
+  });
+  tabs.forEach((t,i) => t.classList.toggle('active', i === idx));
+  document.getElementById('screen-' + idx).classList.add('visible');
+  document.getElementById('phone-label').textContent = labels[idx];
+}
+</script>
+</body>
+</html>

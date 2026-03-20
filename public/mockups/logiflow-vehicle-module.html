@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LogiFlow — Quản lý Phương tiện</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0f0a;
+  --surface: #141710;
+  --surface2: #1c2018;
+  --surface3: #232820;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --accent: #a8e044;
+  --accent-dim: rgba(168,224,68,0.12);
+  --accent-glow: rgba(168,224,68,0.25);
+  --orange: #ff8c00;
+  --orange-dim: rgba(255,140,0,0.12);
+  --red: #ff4444;
+  --red-dim: rgba(255,68,68,0.12);
+  --blue: #4499ff;
+  --blue-dim: rgba(68,153,255,0.12);
+  --text: #eef2e6;
+  --muted: #7a8a6a;
+  --muted2: #4a5a3a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: fixed; left: 0; top: 0; bottom: 0; width: 220px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  z-index: 50;
+}
+
+.logo {
+  padding: 22px 18px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 2px;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.logo-sub {
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.nav { padding: 14px 10px; flex: 1; }
+
+.nav-group-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted2);
+  padding: 10px 8px 5px;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 1px;
+}
+
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+
+.nav-item.active {
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-weight: 700;
+  border: 1px solid rgba(168,224,68,0.2);
+}
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--red);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.nav-badge.orange { background: var(--orange); }
+.nav-badge.accent { background: var(--accent); color: #000; }
+
+.sidebar-footer {
+  padding: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.user {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px;
+  background: var(--surface2);
+  border-radius: 10px;
+}
+
+.user-ava {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #6ab80a);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: #000;
+}
+
+.user-name { font-size: 12px; font-weight: 600; }
+.user-role { font-size: 10px; color: var(--muted); }
+
+/* ── MAIN ── */
+.main { margin-left: 220px; min-height: 100vh; }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 40;
+}
+
+.topbar-left { display: flex; align-items: center; gap: 14px; }
+
+.page-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 1.5px;
+  color: var(--text);
+}
+
+.tab-pills {
+  display: flex;
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.tab-pill {
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.15s;
+}
+
+.tab-pill.active { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(168,224,68,0.2); }
+.tab-pill:hover:not(.active) { color: var(--text); }
+
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+
+.alert-bell {
+  position: relative;
+  width: 34px; height: 34px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.bell-badge {
+  position: absolute;
+  top: 5px; right: 5px;
+  width: 8px; height: 8px;
+  background: var(--red);
+  border-radius: 50%;
+  border: 1px solid var(--surface);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #0c0f0a;
+  border: none;
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: 'Manrope', sans-serif;
+  display: flex; align-items: center; gap: 6px;
+  letter-spacing: 0.3px;
+  transition: opacity 0.15s;
+}
+
+.btn-primary:hover { opacity: 0.9; }
+
+/* ── CONTENT ── */
+.content { padding: 24px 28px; }
+
+/* ── ALERT BANNER ── */
+.alert-banner {
+  background: linear-gradient(135deg, rgba(255,68,68,0.12), rgba(255,140,0,0.08));
+  border: 1px solid rgba(255,68,68,0.3);
+  border-radius: 12px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.alert-icon-wrap {
+  width: 36px; height: 36px;
+  background: var(--red-dim);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+  animation: shake 0.5s ease 0.5s;
+}
+
+@keyframes shake {
+  0%,100% { transform: rotate(0); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+
+.alert-text { flex: 1; }
+.alert-title { font-size: 13px; font-weight: 700; color: #ff7777; }
+.alert-body { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.alert-action {
+  background: var(--red-dim);
+  border: 1px solid rgba(255,68,68,0.3);
+  color: var(--red);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: 'Manrope', sans-serif;
+}
+
+/* ── STAT CARDS ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  animation: slideUp 0.4s ease both;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.0s; }
+.stat-card:nth-child(2) { animation-delay: 0.07s; }
+.stat-card:nth-child(3) { animation-delay: 0.14s; }
+.stat-card:nth-child(4) { animation-delay: 0.21s; }
+.stat-card:nth-child(5) { animation-delay: 0.28s; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.stat-card.green::after { background: var(--accent); }
+.stat-card.orange::after { background: var(--orange); }
+.stat-card.red::after { background: var(--red); }
+.stat-card.blue::after { background: var(--blue); }
+.stat-card.yellow::after { background: #f0c040; }
+
+.sc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.sc-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; }
+.sc-icon {
+  width: 30px; height: 30px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+
+.sc-icon.green { background: var(--accent-dim); }
+.sc-icon.orange { background: var(--orange-dim); }
+.sc-icon.red { background: var(--red-dim); }
+.sc-icon.blue { background: var(--blue-dim); }
+.sc-icon.yellow { background: rgba(240,192,64,0.12); }
+
+.sc-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 30px;
+  letter-spacing: 1px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.sc-sub { font-size: 10px; color: var(--muted); }
+.sc-sub.up { color: var(--accent); }
+.sc-sub.down { color: var(--red); }
+.sc-sub.warn { color: var(--orange); }
+
+/* ── MAIN GRID ── */
+.grid-main {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* ── VEHICLE TABLE ── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.panel-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1.5px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-action {
+  font-size: 11px;
+  color: var(--accent);
+  cursor: pointer;
+  background: var(--accent-dim);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  border: 1px solid rgba(168,224,68,0.2);
+}
+
+/* Search + Filter */
+.table-toolbar {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.search-input {
+  flex: 1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 7px 12px;
+  font-size: 12px;
+  color: var(--text);
+  font-family: 'Manrope', sans-serif;
+  outline: none;
+}
+
+.search-input::placeholder { color: var(--muted); }
+.search-input:focus { border-color: var(--accent); }
+
+.filter-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 7px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: 'Manrope', sans-serif;
+  transition: all 0.15s;
+}
+
+.filter-btn:hover, .filter-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; }
+
+thead th {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+  padding: 10px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--surface2); }
+tbody tr.selected { background: var(--accent-dim); }
+
+td { padding: 11px 16px; font-size: 12px; vertical-align: middle; }
+
+.vehicle-id-cell { display: flex; align-items: center; gap: 10px; }
+
+.vehicle-icon {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.vehicle-icon.truck { background: rgba(68,153,255,0.12); }
+.vehicle-icon.van { background: rgba(168,224,68,0.12); }
+.vehicle-icon.mini { background: rgba(255,140,0,0.12); }
+
+.plate {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: var(--text);
+}
+
+.model { font-size: 10px; color: var(--muted); margin-top: 0; }
+
+/* Status badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.badge-running { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(168,224,68,0.2); }
+.badge-idle { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(68,153,255,0.2); }
+.badge-maintenance { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(255,140,0,0.2); }
+.badge-broken { background: var(--red-dim); color: var(--red); border: 1px solid rgba(255,68,68,0.2); }
+
+.status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+/* Fuel column */
+.fuel-cell { min-width: 90px; }
+.fuel-bar-wrap { display: flex; align-items: center; gap: 6px; }
+.fuel-pct { font-size: 11px; font-weight: 700; width: 30px; }
+.fuel-track { flex: 1; height: 5px; background: var(--surface3); border-radius: 3px; overflow: hidden; }
+.fuel-fill { height: 100%; border-radius: 3px; }
+.fuel-fill.high { background: var(--accent); }
+.fuel-fill.mid { background: var(--orange); }
+.fuel-fill.low { background: var(--red); animation: fuelPulse 1.5s infinite; }
+
+@keyframes fuelPulse {
+  0%,100% { opacity: 1; } 50% { opacity: 0.5; }
+}
+
+/* Maintenance */
+.maint-cell { font-size: 11px; }
+.maint-ok { color: var(--accent); font-weight: 600; }
+.maint-soon { color: var(--orange); font-weight: 700; }
+.maint-overdue { color: var(--red); font-weight: 700; animation: blink 1s infinite; }
+
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.maint-days { font-size: 9px; color: var(--muted); margin-top: 1px; }
+
+/* KM */
+.km-cell { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 0.5px; }
+
+/* Driver assigned */
+.driver-cell { display: flex; align-items: center; gap: 7px; font-size: 12px; }
+.driver-ava-sm {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 800; color: #000;
+}
+
+/* ── DISPATCH PANEL ── */
+.dispatch-panel { display: flex; flex-direction: column; gap: 0; }
+
+/* Maintenance alerts list */
+.maint-list { flex: 1; }
+
+.maint-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.maint-item:last-child { border-bottom: none; }
+.maint-item:hover { background: var(--surface2); }
+
+.maint-item-icon {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.mi-urgent { background: var(--red-dim); }
+.mi-soon { background: var(--orange-dim); }
+.mi-ok { background: var(--accent-dim); }
+
+.maint-item-info { flex: 1; min-width: 0; }
+.maint-item-plate { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 1px; }
+.maint-item-type { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+.maint-item-right { text-align: right; flex-shrink: 0; }
+.maint-due { font-size: 11px; font-weight: 700; }
+.maint-due.urgent { color: var(--red); }
+.maint-due.soon { color: var(--orange); }
+.maint-due.ok { color: var(--accent); }
+.maint-km { font-size: 9px; color: var(--muted); margin-top: 2px; }
+
+.sched-btn {
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--muted);
+  padding: 2px 7px;
+  cursor: pointer;
+  font-family: 'Manrope', sans-serif;
+  margin-top: 4px;
+  transition: all 0.15s;
+}
+
+.sched-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.sched-btn.scheduled { color: var(--accent); border-color: rgba(168,224,68,0.3); background: var(--accent-dim); }
+
+/* ── BOTTOM GRID ── */
+.grid-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+/* ── FUEL CHART ── */
+.fuel-chart-body { padding: 16px 20px; }
+
+.fuel-bars-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 100px;
+  margin-bottom: 8px;
+}
+
+.fc-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+
+.fc-bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  transition: opacity 0.2s;
+  cursor: pointer;
+  position: relative;
+  min-width: 18px;
+}
+
+.fc-bar:hover { opacity: 0.8; }
+.fc-bar:hover::after {
+  content: attr(data-val);
+  position: absolute;
+  top: -20px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.fc-bar.consumed { background: var(--orange); }
+.fc-bar.refueled { background: var(--accent); opacity: 0.5; }
+
+.fc-label { font-size: 9px; color: var(--muted); text-align: center; }
+
+.fuel-legend {
+  display: flex; gap: 12px; margin-top: 8px;
+}
+
+.fl-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--muted); }
+.fl-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+.fuel-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.fs-item {
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.fs-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+}
+
+.fs-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+
+/* ── DISPATCH BOARD ── */
+.dispatch-board-body { padding: 0; }
+
+.dispatch-slot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.dispatch-slot:last-child { border-bottom: none; }
+.dispatch-slot:hover { background: var(--surface2); }
+
+.ds-time {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  width: 44px;
+  flex-shrink: 0;
+}
+
+.ds-bar {
+  width: 3px;
+  height: 40px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.ds-info { flex: 1; }
+.ds-route { font-size: 12px; font-weight: 700; }
+.ds-meta { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+.ds-vehicle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.8px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+
+.ds-change-btn {
+  width: 26px; height: 26px;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.ds-change-btn:hover { border-color: var(--accent); background: var(--accent-dim); }
+
+/* Drag tooltip */
+.drag-hint {
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+  padding: 10px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+
+/* ── MAINTENANCE SCHEDULE PANEL ── */
+.schedule-body { padding: 0; }
+
+.schedule-month {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sched-month-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.sched-nav { display: flex; gap: 4px; }
+.sched-nav-btn {
+  width: 24px; height: 24px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--muted);
+  font-family: 'Manrope', sans-serif;
+  transition: all 0.15s;
+}
+
+.sched-nav-btn:hover { color: var(--accent); border-color: rgba(168,224,68,0.3); }
+
+.calendar-mini {
+  padding: 10px 16px 14px;
+}
+
+.cal-days-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.cal-day-label {
+  text-align: center;
+  font-size: 9px;
+  color: var(--muted);
+  font-weight: 700;
+  padding: 3px 0;
+  text-transform: uppercase;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.12s;
+  position: relative;
+  font-weight: 500;
+}
+
+.cal-day:hover { background: var(--surface2); }
+.cal-day.today { background: var(--accent-dim); color: var(--accent); font-weight: 800; border: 1px solid rgba(168,224,68,0.3); }
+.cal-day.has-event::after {
+  content: '';
+  position: absolute;
+  bottom: 2px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.cal-day.event-red { color: var(--red); }
+.cal-day.event-orange { color: var(--orange); }
+.cal-day.event-green { color: var(--accent); }
+.cal-day.empty { opacity: 0; pointer-events: none; }
+
+.upcoming-events { padding: 0 16px 14px; }
+.ue-title { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+
+.event-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+}
+
+.event-item:last-child { border-bottom: none; }
+.event-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.event-date { color: var(--muted); width: 32px; flex-shrink: 0; }
+.event-desc { flex: 1; font-weight: 500; }
+.event-plate { font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 0.8px; color: var(--muted); }
+
+/* ── MODAL ── */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+  animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+  from { transform: scale(0.95) translateY(10px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.modal-header {
+  padding: 20px 22px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modal-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+
+.modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px; }
+.modal-sub { font-size: 11px; color: var(--muted); }
+.modal-close {
+  margin-left: auto;
+  width: 28px; height: 28px;
+  background: var(--surface2);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--muted);
+  transition: all 0.15s;
+}
+
+.modal-close:hover { background: var(--red-dim); color: var(--red); }
+
+.modal-body { padding: 20px 22px; }
+
+.modal-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.info-item {
+  background: var(--surface2);
+  border-radius: 9px;
+  padding: 12px 14px;
+}
+
+.info-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+.info-val { font-size: 14px; font-weight: 700; }
+.info-val.accent { color: var(--accent); }
+.info-val.red { color: var(--red); }
+.info-val.orange { color: var(--orange); }
+
+.maintenance-history { margin-bottom: 20px; }
+
+.hist-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.hist-item:last-child { border-bottom: none; }
+.hist-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.hist-date { color: var(--muted); font-size: 10px; width: 70px; }
+.hist-type { flex: 1; font-weight: 500; }
+.hist-cost { color: var(--accent); font-weight: 700; font-size: 11px; }
+
+.form-row { margin-bottom: 14px; }
+.form-label { font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 5px; }
+.form-input {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: var(--text);
+  font-family: 'Manrope', sans-serif;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.form-input:focus { border-color: var(--accent); }
+
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+
+.modal-footer {
+  padding: 16px 22px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.btn-ghost {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Manrope', sans-serif;
+  transition: all 0.15s;
+}
+
+.btn-ghost:hover { border-color: var(--border2); color: var(--text); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  z-index: 300;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  max-width: 320px;
+}
+
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast-icon { font-size: 18px; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-text">LOGIFLOW</div>
+    <div class="logo-sub">Fleet Management</div>
+  </div>
+  <nav class="nav">
+    <div class="nav-group-label">Tổng quan</div>
+    <div class="nav-item">📊 Dashboard</div>
+    <div class="nav-item">🗺️ Bản đồ xe</div>
+    <div class="nav-group-label">Vận hành</div>
+    <div class="nav-item">📦 Đơn hàng <span class="nav-badge">5</span></div>
+    <div class="nav-item">🚚 Chuyến xe</div>
+    <div class="nav-item active">🚛 Phương tiện <span class="nav-badge orange">3</span></div>
+    <div class="nav-item">👤 Tài xế</div>
+    <div class="nav-group-label">Tài chính</div>
+    <div class="nav-item">⛽ Chi phí</div>
+    <div class="nav-item">📊 Báo cáo</div>
+    <div class="nav-group-label">Hệ thống</div>
+    <div class="nav-item">🔔 Cảnh báo <span class="nav-badge">7</span></div>
+    <div class="nav-item">⚙️ Cài đặt</div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user">
+      <div class="user-ava">TN</div>
+      <div>
+        <div class="user-name">Trần Nam</div>
+        <div class="user-role">Fleet Manager</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="page-title">PHƯƠNG TIỆN</div>
+      <div class="tab-pills">
+        <div class="tab-pill active" onclick="switchTab(this, 'fleet')">🚛 Đội xe</div>
+        <div class="tab-pill" onclick="switchTab(this, 'dispatch')">🎯 Điều phối</div>
+        <div class="tab-pill" onclick="switchTab(this, 'fuel')">⛽ Nhiên liệu</div>
+        <div class="tab-pill" onclick="switchTab(this, 'maintenance')">🔧 Bảo trì</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="alert-bell" onclick="openModal('alert-modal')">
+        🔔
+        <div class="bell-badge"></div>
+      </div>
+      <button class="btn-primary" onclick="openModal('add-modal')">+ Thêm xe</button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- ALERT BANNER -->
+    <div class="alert-banner">
+      <div class="alert-icon-wrap">🚨</div>
+      <div class="alert-text">
+        <div class="alert-title">3 xe cần bảo trì khẩn cấp — 51G-234 đã quá hạn 12 ngày!</div>
+        <div class="alert-body">51G-234 (quá hạn), 51H-890 (còn 3 ngày), 51K-567 (hết hạn đăng kiểm). Cần lên lịch ngay để tránh vi phạm pháp luật.</div>
+      </div>
+      <button class="alert-action" onclick="openModal('maint-modal')">Xem chi tiết →</button>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="stats-row">
+      <div class="stat-card green">
+        <div class="sc-top">
+          <div class="sc-label">Tổng xe</div>
+          <div class="sc-icon green">🚛</div>
+        </div>
+        <div class="sc-value">24</div>
+        <div class="sc-sub up">▲ +2 xe tháng này</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="sc-top">
+          <div class="sc-label">Đang hoạt động</div>
+          <div class="sc-icon blue">📍</div>
+        </div>
+        <div class="sc-value">16</div>
+        <div class="sc-sub">67% đội xe</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="sc-top">
+          <div class="sc-label">Cần bảo trì</div>
+          <div class="sc-icon orange">🔧</div>
+        </div>
+        <div class="sc-value">3</div>
+        <div class="sc-sub warn">⚠ Cần xử lý ngay</div>
+      </div>
+      <div class="stat-card yellow">
+        <div class="sc-top">
+          <div class="sc-label">Tiêu hao XD tuần</div>
+          <div class="sc-icon yellow">⛽</div>
+        </div>
+        <div class="sc-value">2.840L</div>
+        <div class="sc-sub down">▲ +5% vs tuần trước</div>
+      </div>
+      <div class="stat-card red">
+        <div class="sc-top">
+          <div class="sc-label">Chi phí bảo trì/tháng</div>
+          <div class="sc-icon red">💰</div>
+        </div>
+        <div class="sc-value">28.4M</div>
+        <div class="sc-sub down">▼ -8% vs tháng trước</div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="grid-main">
+
+      <!-- FLEET TABLE -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">🚛 Danh sách đội xe</div>
+          <div class="panel-action" onclick="openModal('add-modal')">+ Thêm xe mới</div>
+        </div>
+        <div class="table-toolbar">
+          <input class="search-input" placeholder="🔍  Tìm biển số, tài xế..." oninput="filterTable(this.value)">
+          <button class="filter-btn active" onclick="toggleFilter(this, 'all')">Tất cả (24)</button>
+          <button class="filter-btn" onclick="toggleFilter(this, 'running')">🟢 Đang chạy</button>
+          <button class="filter-btn" onclick="toggleFilter(this, 'maint')">🟠 Bảo trì</button>
+        </div>
+        <table id="vehicle-table">
+          <thead>
+            <tr>
+              <th>Biển số / Loại xe</th>
+              <th>Trạng thái</th>
+              <th>Tài xế</th>
+              <th>Nhiên liệu</th>
+              <th>ODO (km)</th>
+              <th>Bảo trì kế tiếp</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="vehicle-tbody">
+            <tr onclick="openVehicleModal('51C-123.45')">
+              <td>
+                <div class="vehicle-id-cell">
+                  <div class="vehicle-icon truck">🚛</div>
+                  <div><div class="plate">51C-123.45</div><div class="model">Hino 500 · 10 tấn</div></div>
+                </div>
+              </td>
+              <td><span class="status-badge badge-running"><span class="status-dot"></span>Đang chạy</span></td>
+              <td><div class="driver-cell"><div class="driver-ava-sm" style="background:var(--accent)">A</div>Nguyễn Văn A</div></td>
+              <td class="fuel-cell">
+                <div class="fuel-bar-wrap">
+                  <span class="fuel-pct" style="color:var(--accent)">78%</span>
+                  <div class="fuel-track"><div class="fuel-fill high" style="width:78%"></div></div>
+                </div>
+              </td>
+              <td class="km-cell">142,580</td>
+              <td class="maint-cell"><div class="maint-ok">✓ Còn 18 ngày</div><div class="maint-days">145,000 km · Thay dầu</div></td>
+              <td><div class="panel-action" style="font-size:10px">Chi tiết</div></td>
+            </tr>
+            <tr onclick="openVehicleModal('51D-456.78')">
+              <td>
+                <div class="vehicle-id-cell">
+                  <div class="vehicle-icon van">🚐</div>
+                  <div><div class="plate">51D-456.78</div><div class="model">Hyundai Porter · 1.5 tấn</div></div>
+                </div>
+              </td>
+              <td><span class="status-badge badge-running"><span class="status-dot"></span>Đang chạy</span></td>
+              <td><div class="driver-cell"><div class="driver-ava-sm" style="background:#4499ff">B</div>Trần Văn B</div></td>
+              <td class="fuel-cell">
+                <div class="fuel-bar-wrap">
+                  <span class="fuel-pct" style="color:var(--orange)">42%</span>
+                  <div class="fuel-track"><div class="fuel-fill mid" style="width:42%"></div></div>
+                </div>
+              </td>
+              <td class="km-cell">88,240</td>
+              <td class="maint-cell"><div class="maint-soon">⚠ Còn 3 ngày</div><div class="maint-days">90,000 km · Thay lốp</div></td>
+              <td><div class="panel-action" style="font-size:10px">Chi tiết</div></td>
+            </tr>
+            <tr onclick="openVehicleModal('51E-789.01')">
+              <td>
+                <div class="vehicle-id-cell">
+                  <div class="vehicle-icon truck">🚛</div>
+                  <div><div class="plate">51E-789.01</div><div class="model">Isuzu NQR · 5 tấn</div></div>
+                </div>
+              </td>
+              <td><span class="status-badge badge-idle"><span class="status-dot"></span>Chờ</span></td>
+              <td><div class="driver-cell"><div class="driver-ava-sm" style="background:#22c55e">C</div>Lê Thị C</div></td>
+              <td class="fuel-cell">
+                <div class="fuel-bar-wrap">
+                  <span class="fuel-pct" style="color:var(--accent)">91%</span>
+                  <div class="fuel-track"><div class="fuel-fill high" style="width:91%"></div></div>
+                </div>
+              </td>
+              <td class="km-cell">203,100</td>
+              <td class="maint-cell"><div class="maint-ok">✓ Còn 25 ngày</div><div class="maint-days">205,000 km · Đại tu</div></td>
+              <td><div class="panel-action" style="font-size:10px">Chi tiết</div></td>
+            </tr>
+            <tr onclick="openVehicleModal('51G-234.56')" style="background:rgba(255,68,68,0.04)">
+              <td>
+                <div class="vehicle-id-cell">
+                  <div class="vehicle-icon mini">🚚</div>
+                  <div><div class="plate">51G-234.56</div><div class="model">Kia K250 · 2.5 tấn</div></div>
+                </div>
+              </td>
+              <td><span class="status-badge badge-maintenance"><span class="status-dot"></span>Bảo trì</span></td>
+              <td><div class="driver-cell" style="color:var(--muted)">— Không có</div></td>
+              <td class="fuel-cell">
+                <div class="fuel-bar-wrap">
+                  <span class="fuel-pct" style="color:var(--red)">18%</span>
+                  <div class="fuel-track"><div class="fuel-fill low" style="width:18%"></div></div>
+                </div>
+              </td>
+              <td class="km-cell" style="color:var(--red)">67,850</td>
+              <td class="maint-cell"><div class="maint-overdue">🚨 Quá hạn 12 ngày</div><div class="maint-days">65,000 km · Đăng kiểm</div></td>
+              <td><div class="panel-action" style="font-size:10px;border-color:rgba(255,68,68,0.3);color:var(--red);background:var(--red-dim)">Lên lịch</div></td>
+            </tr>
+            <tr onclick="openVehicleModal('51H-567.89')">
+              <td>
+                <div class="vehicle-id-cell">
+                  <div class="vehicle-icon truck">🚛</div>
+                  <div><div class="plate">51H-567.89</div><div class="model">Thaco Ollin · 7 tấn</div></div>
+                </div>
+              </td>
+              <td><span class="status-badge badge-running"><span class="status-dot"></span>Đang chạy</span></td>
+              <td><div class="driver-cell"><div class="driver-ava-sm" style="background:#8b5cf6">D</div>Phạm Văn D</div></td>
+              <td class="fuel-cell">
+                <div class="fuel-bar-wrap">
+                  <span class="fuel-pct" style="color:var(--orange)">55%</span>
+                  <div class="fuel-track"><div class="fuel-fill mid" style="width:55%"></div></div>
+                </div>
+              </td>
+              <td class="km-cell">115,440</td>
+              <td class="maint-cell"><div class="maint-ok">✓ Còn 31 ngày</div><div class="maint-days">120,000 km · Thay dầu</div></td>
+              <td><div class="panel-action" style="font-size:10px">Chi tiết</div></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="vehicle-id-cell">
+                  <div class="vehicle-icon van">🚐</div>
+                  <div><div class="plate">51K-890.12</div><div class="model">Ford Transit · 16 chỗ (hàng)</div></div>
+                </div>
+              </td>
+              <td><span class="status-badge badge-broken"><span class="status-dot"></span>Hỏng</span></td>
+              <td><div class="driver-cell" style="color:var(--muted)">— Dừng hoạt động</div></td>
+              <td class="fuel-cell">
+                <div class="fuel-bar-wrap">
+                  <span class="fuel-pct" style="color:var(--muted)">—</span>
+                  <div class="fuel-track"><div class="fuel-fill" style="width:0%;background:var(--muted2)"></div></div>
+                </div>
+              </td>
+              <td class="km-cell" style="color:var(--muted)">31,200</td>
+              <td class="maint-cell"><div class="maint-overdue">🚨 Sửa chữa động cơ</div><div class="maint-days">Dự kiến 7 ngày</div></td>
+              <td><div class="panel-action" style="font-size:10px">Chi tiết</div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RIGHT: MAINTENANCE ALERTS -->
+      <div class="panel dispatch-panel">
+        <div class="panel-header">
+          <div class="panel-title">🔧 Cảnh báo bảo trì</div>
+          <div class="panel-action">Lên lịch tất cả</div>
+        </div>
+        <div class="maint-list">
+          <div class="maint-item">
+            <div class="maint-item-icon mi-urgent">🚨</div>
+            <div class="maint-item-info">
+              <div class="maint-item-plate">51G-234.56</div>
+              <div class="maint-item-type">Đăng kiểm định kỳ</div>
+              <button class="sched-btn" onclick="scheduleThis(this)">+ Đặt lịch ngay</button>
+            </div>
+            <div class="maint-item-right">
+              <div class="maint-due urgent">Quá hạn 12 ngày</div>
+              <div class="maint-km">67,850 km</div>
+            </div>
+          </div>
+          <div class="maint-item">
+            <div class="maint-item-icon mi-soon">⚠️</div>
+            <div class="maint-item-info">
+              <div class="maint-item-plate">51D-456.78</div>
+              <div class="maint-item-type">Thay lốp — 90,000 km</div>
+              <button class="sched-btn" onclick="scheduleThis(this)">+ Đặt lịch</button>
+            </div>
+            <div class="maint-item-right">
+              <div class="maint-due soon">Còn 3 ngày</div>
+              <div class="maint-km">88,240 km (+1,760)</div>
+            </div>
+          </div>
+          <div class="maint-item">
+            <div class="maint-item-icon mi-soon">🔔</div>
+            <div class="maint-item-info">
+              <div class="maint-item-plate">51K-890.12</div>
+              <div class="maint-item-type">Sửa chữa động cơ</div>
+              <button class="sched-btn scheduled">✓ Đã lên lịch 24/03</button>
+            </div>
+            <div class="maint-item-right">
+              <div class="maint-due soon">Đang sửa</div>
+              <div class="maint-km">31,200 km</div>
+            </div>
+          </div>
+          <div class="maint-item">
+            <div class="maint-item-icon mi-ok">🟢</div>
+            <div class="maint-item-info">
+              <div class="maint-item-plate">51H-567.89</div>
+              <div class="maint-item-type">Thay dầu — 120,000 km</div>
+              <button class="sched-btn" onclick="scheduleThis(this)">+ Đặt lịch</button>
+            </div>
+            <div class="maint-item-right">
+              <div class="maint-due ok">Còn 31 ngày</div>
+              <div class="maint-km">115,440 km (+4,560)</div>
+            </div>
+          </div>
+          <div class="maint-item">
+            <div class="maint-item-icon mi-ok">🟢</div>
+            <div class="maint-item-info">
+              <div class="maint-item-plate">51C-123.45</div>
+              <div class="maint-item-type">Thay dầu — 145,000 km</div>
+              <button class="sched-btn" onclick="scheduleThis(this)">+ Đặt lịch</button>
+            </div>
+            <div class="maint-item-right">
+              <div class="maint-due ok">Còn 18 ngày</div>
+              <div class="maint-km">142,580 km (+2,420)</div>
+            </div>
+          </div>
+          <div class="maint-item">
+            <div class="maint-item-icon mi-ok">🟢</div>
+            <div class="maint-item-info">
+              <div class="maint-item-plate">51E-789.01</div>
+              <div class="maint-item-type">Đại tu — 205,000 km</div>
+              <button class="sched-btn" onclick="scheduleThis(this)">+ Đặt lịch</button>
+            </div>
+            <div class="maint-item-right">
+              <div class="maint-due ok">Còn 25 ngày</div>
+              <div class="maint-km">203,100 km (+1,900)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM GRID -->
+    <div class="grid-bottom">
+
+      <!-- FUEL CHART -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">⛽ Tiêu hao nhiên liệu</div>
+          <div style="font-size:11px;color:var(--muted)">7 ngày gần nhất</div>
+        </div>
+        <div class="fuel-chart-body">
+          <div class="fuel-bars-row">
+            <div class="fc-bar-wrap">
+              <div class="fc-bar consumed" style="height:55px" data-val="380L"></div>
+              <div class="fc-label">T2</div>
+            </div>
+            <div class="fc-bar-wrap">
+              <div class="fc-bar consumed" style="height:42px" data-val="290L"></div>
+              <div class="fc-label">T3</div>
+            </div>
+            <div class="fc-bar-wrap">
+              <div class="fc-bar consumed" style="height:68px" data-val="470L"></div>
+              <div class="fc-label">T4</div>
+            </div>
+            <div class="fc-bar-wrap">
+              <div class="fc-bar consumed" style="height:50px" data-val="345L"></div>
+              <div class="fc-label">T5</div>
+            </div>
+            <div class="fc-bar-wrap">
+              <div class="fc-bar consumed" style="height:78px" data-val="540L"></div>
+              <div class="fc-label">T6</div>
+            </div>
+            <div class="fc-bar-wrap">
+              <div class="fc-bar consumed" style="height:60px" data-val="415L"></div>
+              <div class="fc-label">T7</div>
+            </div>
+            <div class="fc-bar-wrap">
+              <div class="fc-bar consumed" style="height:46px;opacity:0.5" data-val="400L"></div>
+              <div class="fc-label" style="color:var(--accent)">CN</div>
+            </div>
+          </div>
+          <div class="fuel-legend">
+            <div class="fl-item"><div class="fl-dot" style="background:var(--orange)"></div>Tiêu thụ</div>
+            <div class="fl-item"><div class="fl-dot" style="background:var(--accent);opacity:0.5"></div>Đổ thêm</div>
+          </div>
+          <div class="fuel-summary">
+            <div class="fs-item">
+              <div class="fs-val">2,840L</div>
+              <div class="fs-label">Tổng tiêu thụ / tuần</div>
+            </div>
+            <div class="fs-item">
+              <div class="fs-val" style="color:var(--orange)">118L/xe</div>
+              <div class="fs-label">Trung bình / xe</div>
+            </div>
+            <div class="fs-item">
+              <div class="fs-val">84.2M đ</div>
+              <div class="fs-label">Chi phí nhiên liệu</div>
+            </div>
+            <div class="fs-item">
+              <div class="fs-val" style="color:var(--red)">+5%</div>
+              <div class="fs-label">So với tuần trước</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DISPATCH BOARD -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">🎯 Điều phối linh hoạt</div>
+          <div class="panel-action">+ Tạo chuyến</div>
+        </div>
+        <div class="dispatch-board-body">
+          <div class="dispatch-slot">
+            <div class="ds-time">08:00</div>
+            <div class="ds-bar" style="background:var(--accent)"></div>
+            <div class="ds-info">
+              <div class="ds-route">Q1 → KCN Mỹ Phước</div>
+              <div class="ds-meta">Nguyễn Văn A · 45km · 280K đ</div>
+            </div>
+            <div class="ds-vehicle" style="background:var(--accent-dim);color:var(--accent)">51C-123</div>
+            <div class="ds-change-btn" title="Đổi xe" onclick="showToast('🔄 Đổi xe cho chuyến 08:00')">⇄</div>
+          </div>
+          <div class="dispatch-slot">
+            <div class="ds-time">09:30</div>
+            <div class="ds-bar" style="background:var(--blue)"></div>
+            <div class="ds-info">
+              <div class="ds-route">Thủ Đức → Long An</div>
+              <div class="ds-meta">Trần Văn B · 38km · 240K đ</div>
+            </div>
+            <div class="ds-vehicle" style="background:var(--blue-dim);color:var(--blue)">51D-456</div>
+            <div class="ds-change-btn" onclick="showToast('🔄 Đổi xe cho chuyến 09:30')">⇄</div>
+          </div>
+          <div class="dispatch-slot" style="background:rgba(255,68,68,0.04)">
+            <div class="ds-time" style="color:var(--red)">11:00</div>
+            <div class="ds-bar" style="background:var(--red)"></div>
+            <div class="ds-info">
+              <div class="ds-route">Q7 → Đồng Nai</div>
+              <div class="ds-meta" style="color:var(--red)">⚠ Chưa phân công xe!</div>
+            </div>
+            <div class="ds-vehicle" style="background:var(--red-dim);color:var(--red)">? Chưa xe</div>
+            <div class="ds-change-btn" style="border-color:rgba(255,68,68,0.3)" onclick="showToast('✅ Đã phân công 51E-789 cho chuyến 11:00')">+ Xe</div>
+          </div>
+          <div class="dispatch-slot">
+            <div class="ds-time">13:30</div>
+            <div class="ds-bar" style="background:#8b5cf6"></div>
+            <div class="ds-info">
+              <div class="ds-route">Bình Dương → Q1 (về)</div>
+              <div class="ds-meta">Phạm Văn D · 48km · 310K đ</div>
+            </div>
+            <div class="ds-vehicle" style="background:rgba(139,92,246,0.12);color:#8b5cf6">51H-567</div>
+            <div class="ds-change-btn" onclick="showToast('🔄 Đổi xe cho chuyến 13:30')">⇄</div>
+          </div>
+          <div class="dispatch-slot">
+            <div class="ds-time">15:00</div>
+            <div class="ds-bar" style="background:var(--orange)"></div>
+            <div class="ds-info">
+              <div class="ds-route">Q4 → KCN Vsip</div>
+              <div class="ds-meta">Lê Thị C · 52km · 340K đ</div>
+            </div>
+            <div class="ds-vehicle" style="background:var(--orange-dim);color:var(--orange)">51E-789</div>
+            <div class="ds-change-btn" onclick="showToast('🔄 Đổi xe cho chuyến 15:00')">⇄</div>
+          </div>
+        </div>
+        <div class="drag-hint">💡 Nhấn ⇄ để đổi xe linh hoạt · Kéo thả để sắp xếp lại</div>
+      </div>
+
+      <!-- MAINTENANCE CALENDAR -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">📅 Lịch bảo trì</div>
+          <div class="panel-action" onclick="openModal('maint-modal')">Lên lịch</div>
+        </div>
+        <div class="schedule-body">
+          <div class="schedule-month">
+            <div class="sched-month-label">Tháng 3 / 2025</div>
+            <div class="sched-nav">
+              <div class="sched-nav-btn">‹</div>
+              <div class="sched-nav-btn">›</div>
+            </div>
+          </div>
+          <div class="calendar-mini">
+            <div class="cal-days-header">
+              <div class="cal-day-label">CN</div>
+              <div class="cal-day-label">T2</div>
+              <div class="cal-day-label">T3</div>
+              <div class="cal-day-label">T4</div>
+              <div class="cal-day-label">T5</div>
+              <div class="cal-day-label">T6</div>
+              <div class="cal-day-label">T7</div>
+            </div>
+            <div class="cal-grid">
+              <!-- Week 1 (Mar starts Sat) -->
+              <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day">1</div>
+              <div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div>
+              <div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day">15</div>
+              <div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day today">20</div>
+              <div class="cal-day has-event event-orange">21</div>
+              <div class="cal-day">22</div>
+              <div class="cal-day has-event event-green">23</div>
+              <div class="cal-day has-event event-red">24</div>
+              <div class="cal-day">25</div>
+              <div class="cal-day has-event event-orange">26</div>
+              <div class="cal-day">27</div>
+              <div class="cal-day">28</div>
+              <div class="cal-day">29</div>
+              <div class="cal-day has-event event-green">30</div>
+              <div class="cal-day">31</div>
+              <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+            </div>
+          </div>
+          <div class="upcoming-events">
+            <div class="ue-title">Sự kiện sắp tới</div>
+            <div class="event-item">
+              <div class="event-dot" style="background:var(--orange)"></div>
+              <div class="event-date">21/03</div>
+              <div class="event-desc">Thay lốp</div>
+              <div class="event-plate">51D-456</div>
+            </div>
+            <div class="event-item">
+              <div class="event-dot" style="background:var(--accent)"></div>
+              <div class="event-date">23/03</div>
+              <div class="event-desc">Thay dầu + lọc</div>
+              <div class="event-plate">51C-123</div>
+            </div>
+            <div class="event-item">
+              <div class="event-dot" style="background:var(--red)"></div>
+              <div class="event-date">24/03</div>
+              <div class="event-desc">Sửa động cơ</div>
+              <div class="event-plate">51K-890</div>
+            </div>
+            <div class="event-item">
+              <div class="event-dot" style="background:var(--orange)"></div>
+              <div class="event-date">26/03</div>
+              <div class="event-desc">Kiểm tra phanh</div>
+              <div class="event-plate">51H-567</div>
+            </div>
+            <div class="event-item">
+              <div class="event-dot" style="background:var(--accent)"></div>
+              <div class="event-date">30/03</div>
+              <div class="event-desc">Đăng kiểm định kỳ</div>
+              <div class="event-plate">51G-234</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- VEHICLE DETAIL MODAL -->
+<div class="modal-overlay" id="vehicle-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon" style="background:var(--blue-dim)">🚛</div>
+      <div>
+        <div class="modal-title" id="modal-plate">51C-123.45</div>
+        <div class="modal-sub">Hino 500 · 10 tấn · Biển TP.HCM</div>
+      </div>
+      <div class="modal-close" onclick="closeModal('vehicle-modal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section-title">Thông tin xe</div>
+      <div class="info-grid">
+        <div class="info-item"><div class="info-label">ODO hiện tại</div><div class="info-val accent">142,580 km</div></div>
+        <div class="info-item"><div class="info-label">Nhiên liệu</div><div class="info-val accent">78% · 156/200L</div></div>
+        <div class="info-item"><div class="info-label">Bảo trì kế tiếp</div><div class="info-val" style="color:var(--accent)">Còn 18 ngày</div></div>
+        <div class="info-item"><div class="info-label">Đăng kiểm</div><div class="info-val">06/2026</div></div>
+        <div class="info-item"><div class="info-label">Bảo hiểm</div><div class="info-val">03/2026</div></div>
+        <div class="info-item"><div class="info-label">Tài xế hiện tại</div><div class="info-val">Nguyễn Văn A</div></div>
+      </div>
+
+      <div class="modal-section-title">Lịch sử bảo trì gần đây</div>
+      <div class="maintenance-history">
+        <div class="hist-item"><div class="hist-dot" style="background:var(--accent)"></div><div class="hist-date">15/02/2025</div><div class="hist-type">Thay dầu máy + lọc</div><div class="hist-cost">1.8M đ</div></div>
+        <div class="hist-item"><div class="hist-dot" style="background:var(--accent)"></div><div class="hist-date">10/01/2025</div><div class="hist-type">Kiểm tra phanh toàn diện</div><div class="hist-cost">2.4M đ</div></div>
+        <div class="hist-item"><div class="hist-dot" style="background:var(--orange)"></div><div class="hist-date">05/12/2024</div><div class="hist-type">Thay lốp 2 bánh sau</div><div class="hist-cost">4.2M đ</div></div>
+        <div class="hist-item"><div class="hist-dot" style="background:var(--blue)"></div><div class="hist-date">20/11/2024</div><div class="hist-type">Đăng kiểm định kỳ</div><div class="hist-cost">850K đ</div></div>
+      </div>
+
+      <div class="modal-section-title">Lên lịch bảo trì</div>
+      <div class="form-row">
+        <div class="form-label">Loại bảo trì</div>
+        <select class="form-input" style="cursor:pointer">
+          <option>Thay dầu máy + lọc</option>
+          <option>Thay lốp xe</option>
+          <option>Kiểm tra phanh</option>
+          <option>Đăng kiểm định kỳ</option>
+          <option>Đại tu xe</option>
+          <option>Sửa chữa đột xuất</option>
+        </select>
+      </div>
+      <div class="form-row-2">
+        <div><div class="form-label">Ngày thực hiện</div><input type="date" class="form-input" value="2025-03-23"></div>
+        <div><div class="form-label">Garage / Xưởng sửa</div><input class="form-input" placeholder="Tên garage..." value="Garage Minh Tuấn"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Ghi chú</div>
+        <input class="form-input" placeholder="Thêm ghi chú..." value="Thay dầu 15W-40, lọc dầu, lọc khí">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal('vehicle-modal')">Đóng</button>
+      <button class="btn-primary" onclick="saveMaint()">✓ Lưu lịch bảo trì</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAINTENANCE ALERT MODAL -->
+<div class="modal-overlay" id="maint-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon" style="background:var(--red-dim)">🚨</div>
+      <div>
+        <div class="modal-title">Cảnh báo bảo trì</div>
+        <div class="modal-sub">3 xe cần xử lý khẩn cấp</div>
+      </div>
+      <div class="modal-close" onclick="closeModal('maint-modal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="info-grid" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="info-item"><div class="info-label">Quá hạn</div><div class="info-val red">1 xe</div></div>
+        <div class="info-item"><div class="info-label">Sắp đến hạn</div><div class="info-val orange">2 xe</div></div>
+        <div class="info-item"><div class="info-label">Đã lên lịch</div><div class="info-val accent">1 xe</div></div>
+      </div>
+      <div class="modal-section-title">Hành động cần làm ngay</div>
+      <div class="checklist-modal" style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--red-dim);border:1px solid rgba(255,68,68,0.25);border-radius:9px;font-size:13px">
+          <span>🚨</span><div><strong>51G-234.56</strong> — Đăng kiểm đã quá hạn 12 ngày. Xe không được phép lưu thông. Xử lý ngay!</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--orange-dim);border:1px solid rgba(255,140,0,0.25);border-radius:9px;font-size:13px">
+          <span>⚠️</span><div><strong>51D-456.78</strong> — Thay lốp trong 3 ngày nữa (90,000 km). Lên lịch trước khi xe hỏng giữa đường.</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--orange-dim);border:1px solid rgba(255,140,0,0.25);border-radius:9px;font-size:13px">
+          <span>🔔</span><div><strong>51K-890.12</strong> — Đang sửa chữa động cơ. Dự kiến xong 27/03. Đã liên hệ Garage Minh Tuấn.</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal('maint-modal')">Đóng</button>
+      <button class="btn-primary" onclick="closeModal('maint-modal');showToast('📅 Đã gửi nhắc nhở đến tất cả tài xế liên quan')">📤 Gửi nhắc nhở</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERT MODAL -->
+<div class="modal-overlay" id="alert-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon" style="background:rgba(255,140,0,0.12)">🔔</div>
+      <div><div class="modal-title">Trung tâm cảnh báo</div><div class="modal-sub">7 cảnh báo chưa xử lý</div></div>
+      <div class="modal-close" onclick="closeModal('alert-modal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;gap:10px;padding:10px 12px;background:var(--red-dim);border-radius:9px;border:1px solid rgba(255,68,68,0.2);font-size:12px;align-items:center">
+          <span>🚨</span><div><strong>51G-234</strong> Đăng kiểm quá hạn 12 ngày — Cần xử lý NGAY</div><div style="margin-left:auto;color:var(--red);font-size:10px;font-weight:700">Khẩn</div>
+        </div>
+        <div style="display:flex;gap:10px;padding:10px 12px;background:var(--orange-dim);border-radius:9px;border:1px solid rgba(255,140,0,0.2);font-size:12px;align-items:center">
+          <span>⛽</span><div><strong>51D-456</strong> Nhiên liệu còn 42% — Cần đổ thêm trước chuyến 13:30</div><div style="margin-left:auto;color:var(--orange);font-size:10px;font-weight:700">Cảnh báo</div>
+        </div>
+        <div style="display:flex;gap:10px;padding:10px 12px;background:var(--orange-dim);border-radius:9px;border:1px solid rgba(255,140,0,0.2);font-size:12px;align-items:center">
+          <span>🔧</span><div><strong>51D-456</strong> Thay lốp còn 3 ngày — Đặt lịch garage ngay</div><div style="margin-left:auto;color:var(--orange);font-size:10px;font-weight:700">Cảnh báo</div>
+        </div>
+        <div style="display:flex;gap:10px;padding:10px 12px;background:var(--surface2);border-radius:9px;border:1px solid var(--border);font-size:12px;align-items:center">
+          <span>🚚</span><div><strong>Chuyến 11:00</strong> Q7→Đồng Nai chưa phân công xe</div><div style="margin-left:auto;color:var(--muted);font-size:10px;font-weight:700">Thông báo</div>
+        </div>
+        <div style="display:flex;gap:10px;padding:10px 12px;background:var(--surface2);border-radius:9px;border:1px solid var(--border);font-size:12px;align-items:center">
+          <span>📊</span><div><strong>Tiêu hao nhiên liệu</strong> tuần này tăng 5% so với tuần trước</div><div style="margin-left:auto;color:var(--muted);font-size:10px;font-weight:700">Thống kê</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal('alert-modal')">Đóng</button>
+      <button class="btn-primary" onclick="closeModal('alert-modal');showToast('✓ Đã đánh dấu tất cả đã đọc')">✓ Đánh dấu đã đọc</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD VEHICLE MODAL -->
+<div class="modal-overlay" id="add-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon" style="background:var(--accent-dim)">🚛</div>
+      <div><div class="modal-title">Thêm xe mới</div><div class="modal-sub">Đăng ký phương tiện vào đội xe</div></div>
+      <div class="modal-close" onclick="closeModal('add-modal')">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="form-row-2">
+        <div><div class="form-label">Biển số xe</div><input class="form-input" placeholder="VD: 51C-999.99"></div>
+        <div><div class="form-label">Loại xe</div>
+          <select class="form-input" style="cursor:pointer">
+            <option>Xe tải nặng (> 5 tấn)</option>
+            <option>Xe tải nhẹ (1-5 tấn)</option>
+            <option>Xe van / bán tải</option>
+            <option>Xe đầu kéo</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row-2">
+        <div><div class="form-label">Hãng xe / Model</div><input class="form-input" placeholder="VD: Hino 500"></div>
+        <div><div class="form-label">Tải trọng (tấn)</div><input class="form-input" placeholder="VD: 10" type="number"></div>
+      </div>
+      <div class="form-row-2">
+        <div><div class="form-label">ODO ban đầu (km)</div><input class="form-input" placeholder="VD: 50000" type="number"></div>
+        <div><div class="form-label">Dung tích bình nhiên liệu (L)</div><input class="form-input" placeholder="VD: 200" type="number"></div>
+      </div>
+      <div class="form-row-2">
+        <div><div class="form-label">Ngày đăng kiểm kế tiếp</div><input type="date" class="form-input"></div>
+        <div><div class="form-label">Ngày hết hạn bảo hiểm</div><input type="date" class="form-input"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Chu kỳ bảo trì (km)</div>
+        <input class="form-input" placeholder="VD: 5000 (nhắc sau mỗi 5,000km)" type="number" value="5000">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal('add-modal')">Hủy</button>
+      <button class="btn-primary" onclick="closeModal('add-modal');showToast('✅ Đã thêm xe mới vào đội xe!')">+ Thêm xe</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon">✅</span>
+  <span id="toast-msg">Đã lưu thành công</span>
+</div>
+
+<script>
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function openVehicleModal(plate) {
+  document.getElementById('modal-plate').textContent = plate;
+  openModal('vehicle-modal');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function saveMaint() {
+  closeModal('vehicle-modal');
+  showToast('📅 Lịch bảo trì đã được lưu và thông báo!');
+}
+
+function scheduleThis(btn) {
+  btn.textContent = '✓ Đã lên lịch';
+  btn.classList.add('scheduled');
+  showToast('📅 Đã đặt lịch bảo trì thành công!');
+}
+
+function switchTab(el, tab) {
+  document.querySelectorAll('.tab-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  const msgs = {
+    fleet: '🚛 Hiển thị danh sách đội xe',
+    dispatch: '🎯 Chế độ điều phối linh hoạt',
+    fuel: '⛽ Báo cáo tiêu hao nhiên liệu',
+    maintenance: '🔧 Lịch bảo trì chi tiết'
+  };
+  showToast(msgs[tab] || 'Tab đã chuyển');
+}
+
+function toggleFilter(btn, filter) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const rows = document.querySelectorAll('#vehicle-tbody tr');
+  rows.forEach(row => {
+    if (filter === 'all') { row.style.display = ''; return; }
+    const badge = row.querySelector('.status-badge');
+    if (!badge) return;
+    if (filter === 'running' && badge.classList.contains('badge-running')) row.style.display = '';
+    else if (filter === 'maint' && (badge.classList.contains('badge-maintenance') || badge.classList.contains('badge-broken'))) row.style.display = '';
+    else row.style.display = 'none';
+  });
+}
+
+function filterTable(val) {
+  const rows = document.querySelectorAll('#vehicle-tbody tr');
+  rows.forEach(row => {
+    row.style.display = row.innerText.toLowerCase().includes(val.toLowerCase()) ? '' : 'none';
+  });
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+</script>
+</body>
+</html>
