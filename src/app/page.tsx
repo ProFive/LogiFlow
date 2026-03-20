@@ -336,6 +336,9 @@ export default function Home() {
             </div>
           </article>
           <article className="contact-panel">
+            <div className="eyebrow" style={{ marginBottom: "8px" }}>
+              {lang === "vi" ? "LogiFlow - Quản lý vận tải" : "LogiFlow - Fleet Management"}
+            </div>
             <h2>{t.contactTitle}</h2>
             <div className="contact-grid">
               <div className="contact-item">
