@@ -11,9 +11,9 @@ export default function Home() {
         login: "Login",
         register: "Sign up",
         eyebrow: "",
-        heroTitle: "Logistics operating infrastructure for Vietnam SMEs",
+        heroTitle: "Logistics operating infrastructure\nfor Vietnam SMEs",
         heroDesc:
-          "LogiFlow digitizes dispatching, fleet, orders, drivers, and costs in real-time. We solve operational leakage with an easy-to-deploy control tower.",
+          "LogiFlow transforms logistics operations by digitizing dispatching, fleet, orders, drivers, and costs in real time—reducing operational leakage through an AI-powered control tower that’s easy to deploy.",
         metric1: "Dispatch time reduction",
         metric2: "Fuel cost reduction",
         metric3: "On-time delivery rate",
@@ -78,15 +78,18 @@ export default function Home() {
           "We are opening our funding round to accelerate product expansion and commercialization. We are ready to share the deck, data room, and product walkthrough.",
         finalDeck: "Get investor deck",
         finalData: "Access sample data",
+        contactTitle: "Contact",
+        contactEmailLabel: "Email",
+        contactPhoneLabel: "Phone",
       };
     }
     return {
       login: "Đăng nhập",
       register: "Đăng ký",
       eyebrow: "",
-      heroTitle: "Hạ tầng vận hành logistics cho SME Việt Nam",
+      heroTitle: "Hạ tầng vận hành logistics\ndành cho SMEs tại Việt Nam",
       heroDesc:
-        "LogiFlow số hóa điều phối đội xe, đơn hàng, tài xế và chi phí theo thời gian thực. Chúng tôi giải quyết bài toán thất thoát vận hành bằng một control-tower dễ triển khai cho doanh nghiệp vừa và nhỏ.",
+        "LogiFlow chuyển đổi hoạt động logistics bằng cách số hóa điều phối, quản lý đội xe, đơn hàng, tài xế và chi phí theo thời gian thực—giúp giảm thất thoát vận hành thông qua một trung tâm điều hành (control tower) ứng dụng AI, dễ dàng triển khai.",
       metric1: "Giảm thời gian điều phối",
       metric2: "Giảm chi phí nhiên liệu",
       metric3: "Tỷ lệ giao đúng hẹn",
@@ -151,6 +154,9 @@ export default function Home() {
         "Chúng tôi đang mở vòng gọi vốn để mở rộng sản phẩm và tăng tốc thương mại hóa. Sẵn sàng gửi deck, data room và lịch product walkthrough.",
       finalDeck: "Nhận Investor Deck",
       finalData: "Truy cập dữ liệu mẫu",
+      contactTitle: "Thông tin liên hệ",
+      contactEmailLabel: "Email",
+      contactPhoneLabel: "Phone",
     };
   }, [lang]);
 
@@ -189,7 +195,9 @@ export default function Home() {
 
       <section className="hero reveal delay-1">
         <p className="eyebrow">{t.eyebrow}</p>
-        <h1>{t.heroTitle}</h1>
+        <h1 key={lang}>
+          {t.heroTitle}
+        </h1>
         <p>{t.heroDesc}</p>
         <div className="hero-metrics">
           <div>
@@ -313,16 +321,33 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="cta-panel section-block reveal delay-10">
-        <h2>{t.finalCta}</h2>
-        <p>{t.finalDesc}</p>
-        <div className="hero-cta">
-          <Link href="/register" className="btn btn-primary">
-            {t.finalDeck}
-          </Link>
-          <Link href="/login" className="btn btn-ghost">
-            {t.finalData}
-          </Link>
+      <section className="section-block reveal delay-10">
+        <div className="final-grid">
+          <article className="cta-panel">
+            <h2>{t.finalCta}</h2>
+            <p>{t.finalDesc}</p>
+            <div className="hero-cta">
+              <Link href="/register" className="btn btn-primary">
+                {t.finalDeck}
+              </Link>
+              <Link href="/login" className="btn btn-ghost">
+                {t.finalData}
+              </Link>
+            </div>
+          </article>
+          <article className="contact-panel">
+            <h2>{t.contactTitle}</h2>
+            <div className="contact-grid">
+              <div className="contact-item">
+                <div className="contact-label">{t.contactEmailLabel}</div>
+                <div className="contact-value">info@LogiFlow.vn</div>
+              </div>
+              <div className="contact-item">
+                <div className="contact-label">{t.contactPhoneLabel}</div>
+                <div className="contact-value">0935.357.567</div>
+              </div>
+            </div>
+          </article>
         </div>
       </section>
     </main>
