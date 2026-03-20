@@ -21,6 +21,19 @@
     --muted2: #94a3b8;
   }
 
+  body.light-theme {
+    --bg: #f3f6fb;
+    --surface: #ffffff;
+    --surface2: #eef3fb;
+    --surface3: #dde6f3;
+    --border: rgba(15,23,42,0.10);
+    --border2: rgba(15,23,42,0.18);
+    --text: #0f172a;
+    --muted: #64748b;
+    --muted2: #475569;
+    --accent2: #2563eb;
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
@@ -45,6 +58,7 @@
   .logo {
     padding: 24px 20px 20px;
     border-bottom: 1px solid var(--border);
+    cursor: pointer;
   }
 
   .logo-mark {
@@ -182,11 +196,133 @@
     cursor: pointer; font-size: 16px;
     position: relative;
   }
+  .theme-toggle-label { font-size: 12px; color: var(--muted2); font-weight: 700; }
 
   .notif-dot {
     position: absolute; top: 6px; right: 6px;
     width: 7px; height: 7px;
     background: var(--accent); border-radius: 50%;
+  }
+  .notif-dot.hidden { display: none; }
+
+  .notif-panel {
+    position: absolute;
+    top: 74px;
+    right: 28px;
+    width: 360px;
+    max-height: 460px;
+    overflow: auto;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.5);
+    z-index: 120;
+    display: none;
+  }
+  .notif-panel.open { display: block; }
+  .notif-panel-header {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .notif-panel-title { font-size: 13px; font-weight: 700; }
+  .notif-panel-action {
+    font-size: 11px;
+    color: var(--accent2);
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .notif-list { padding: 6px 0; }
+  .notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .notif-item:last-child { border-bottom: none; }
+  .notif-item-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .notif-item-dot.high { background: var(--red); }
+  .notif-item-dot.medium { background: var(--yellow); }
+  .notif-item-dot.low { background: var(--green); }
+  .notif-item-body { flex: 1; min-width: 0; }
+  .notif-item-title { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+  .notif-item-text { font-size: 11px; color: var(--muted2); line-height: 1.4; }
+  .notif-item-time { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+  .create-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 220;
+    backdrop-filter: blur(3px);
+  }
+  .create-modal-overlay.open { display: flex; }
+  .create-modal {
+    width: 460px;
+    max-width: calc(100vw - 24px);
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 14px;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.5);
+  }
+  .create-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .create-modal-title { font-size: 14px; font-weight: 700; }
+  .create-modal-close { cursor: pointer; color: var(--muted2); font-size: 16px; }
+  .create-modal-body { padding: 14px 16px; }
+  .create-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .create-field { display: flex; flex-direction: column; gap: 6px; }
+  .create-field label { font-size: 11px; color: var(--muted2); }
+  .create-field input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 10px;
+    color: var(--text);
+    font-size: 12px;
+    outline: none;
+    font-family: inherit;
+  }
+  .create-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .profile-sections { display: grid; gap: 14px; }
+  .profile-section {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    background: var(--surface2);
+  }
+  .profile-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+  .profile-note {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
   }
 
   /* CONTENT */
@@ -968,7 +1104,7 @@
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
-  <div class="logo">
+  <div class="logo" onclick="goDashboard()">
     <div class="logo-mark">
       <div class="logo-icon">🚛</div>
       LogiFlow
@@ -981,19 +1117,19 @@
     <div class="nav-item active" data-main-view="dashboard" onclick="switchMainView('dashboard', this)">
       <span class="icon">📊</span> Dashboard
     </div>
-    <div class="nav-item">
+    <div class="nav-item" data-main-view="map" onclick="switchMainView('map', this)">
       <span class="icon">🗺️</span> Bản đồ xe
     </div>
 
     <div class="nav-section">Vận hành</div>
-    <div class="nav-item">
+    <div class="nav-item" data-main-view="orders" onclick="switchMainView('orders', this)">
       <span class="icon">📦</span> Đơn hàng
       <span class="badge">12</span>
     </div>
-    <div class="nav-item">
+    <div class="nav-item" data-main-view="trips" onclick="switchMainView('trips', this)">
       <span class="icon">🚚</span> Chuyến xe
     </div>
-    <div class="nav-item">
+    <div class="nav-item" data-main-view="drivers" onclick="switchMainView('drivers', this)">
       <span class="icon">👤</span> Tài xế
     </div>
     <div class="nav-item" data-main-view="vehicles" onclick="switchMainView('vehicles', this)">
@@ -1001,28 +1137,28 @@
     </div>
 
     <div class="nav-section">Tài chính</div>
-    <div class="nav-item">
+    <div class="nav-item" data-main-view="costs" onclick="switchMainView('costs', this)">
       <span class="icon">💰</span> Chi phí
     </div>
-    <div class="nav-item">
+    <div class="nav-item" data-main-view="invoices" onclick="switchMainView('invoices', this)">
       <span class="icon">🧾</span> Hóa đơn
     </div>
-    <div class="nav-item">
+    <div class="nav-item" data-main-view="reports" onclick="switchMainView('reports', this)">
       <span class="icon">📈</span> Báo cáo
     </div>
 
     <div class="nav-section">Hệ thống</div>
-    <div class="nav-item">
+    <div class="nav-item" data-main-view="settings" onclick="switchMainView('settings', this)">
       <span class="icon">⚙️</span> Cài đặt
     </div>
   </nav>
 
   <div class="sidebar-footer">
-    <div class="user-card">
-      <div class="avatar">TN</div>
+    <div class="user-card" onclick="openProfileModal()">
+      <div class="avatar" id="sidebar-avatar">TN</div>
       <div class="user-info">
-        <div class="name">Trần Nam</div>
-        <div class="role">Quản trị viên</div>
+        <div class="name" id="sidebar-name">Trần Nam</div>
+        <div class="role" id="sidebar-role">Quản trị viên</div>
       </div>
     </div>
   </div>
@@ -1043,13 +1179,21 @@
       <div class="search-bar">
         🔍 <span>Tìm đơn hàng, xe...</span>
       </div>
-      <div class="icon-btn">
+      <div class="icon-btn" id="notif-btn" onclick="toggleNotifications(event)">
         🔔
-        <div class="notif-dot"></div>
+        <div class="notif-dot" id="notif-dot"></div>
       </div>
-      <button class="btn-primary">+ Tạo chuyến</button>
+      <div class="icon-btn" id="theme-btn" onclick="toggleTheme()" title="Đổi dark/light theme">🌙</div>
+      <button class="btn-primary" id="primary-action-btn" onclick="openCreateModal()">+ Tạo chuyến</button>
     </div>
   </header>
+  <div class="notif-panel" id="notif-panel">
+    <div class="notif-panel-header">
+      <div class="notif-panel-title">🔔 Tất cả thông báo</div>
+      <div class="notif-panel-action" onclick="markAllNotificationsRead()">Đánh dấu đã đọc</div>
+    </div>
+    <div class="notif-list" id="notif-list"></div>
+  </div>
 
   <div class="content">
     <div id="dashboard-view">
@@ -1421,6 +1565,275 @@
     </div>
     </div>
 
+    <div id="map-view" style="display:none">
+      <div class="stats-row">
+        <div class="stat-card blue">
+          <div class="stat-top">
+            <div class="stat-label">Xe đang online</div>
+            <div class="stat-icon blue">📡</div>
+          </div>
+          <div class="stat-value">18</div>
+          <div class="stat-change up">▲ +2 xe trong 30 phút</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-top">
+            <div class="stat-label">Điểm ùn tắc</div>
+            <div class="stat-icon orange">🚧</div>
+          </div>
+          <div class="stat-value">5</div>
+          <div class="stat-change down">▼ -1 điểm so với sáng nay</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-top">
+            <div class="stat-label">ETA đúng hẹn</div>
+            <div class="stat-icon green">⏱️</div>
+          </div>
+          <div class="stat-value">91%</div>
+          <div class="stat-change up">▲ +4% so với hôm qua</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-top">
+            <div class="stat-label">Cảnh báo tuyến</div>
+            <div class="stat-icon yellow">⚠️</div>
+          </div>
+          <div class="stat-value">3</div>
+          <div class="stat-change down">▼ Ưu tiên xử lý ngay</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card map-card">
+          <div class="card-header">
+            <div class="card-title">🗺️ Bản đồ xe trực tuyến</div>
+            <div class="card-action">Làm mới 10s</div>
+          </div>
+          <div class="map-placeholder" style="height: 420px">
+            <div class="road h" style="top:20%; left:0; width:100%"></div>
+            <div class="road h" style="top:35%; left:0; width:100%"></div>
+            <div class="road h" style="top:62%; left:0; width:100%"></div>
+            <div class="road h" style="top:80%; left:0; width:100%"></div>
+            <div class="road v" style="left:18%; top:0; height:100%"></div>
+            <div class="road v" style="left:41%; top:0; height:100%"></div>
+            <div class="road v" style="left:64%; top:0; height:100%"></div>
+            <div class="road v" style="left:84%; top:0; height:100%"></div>
+
+            <div class="map-route" style="top:26%; left:10%"></div>
+            <div class="map-route" style="top:54%; left:50%; width:150px; transform:rotate(12deg)"></div>
+
+            <div class="vehicle-marker active" style="top:17%; left:20%">🚛</div>
+            <div class="vehicle-marker active" style="top:30%; left:47%">🚚</div>
+            <div class="vehicle-marker idle" style="top:34%; left:74%">🚐</div>
+            <div class="vehicle-marker active" style="top:49%; left:31%">🚛</div>
+            <div class="vehicle-marker active" style="top:62%; left:61%">🚚</div>
+            <div class="vehicle-marker idle" style="top:72%; left:80%">🚐</div>
+
+            <div class="map-legend">
+              <div class="legend-item"><span class="legend-dot" style="background: var(--green)"></span>Đang chạy</div>
+              <div class="legend-item"><span class="legend-dot" style="background: var(--yellow)"></span>Dừng tạm</div>
+              <div class="legend-item"><span class="legend-dot" style="background: var(--accent)"></span>Tuyến ưu tiên</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📍 Theo dõi phương tiện</div>
+            <div class="card-action">18 xe online</div>
+          </div>
+          <div id="map-vehicle-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="orders-view" style="display:none">
+      <div class="stats-row">
+        <div class="stat-card orange">
+          <div class="stat-top">
+            <div class="stat-label">Đơn mới hôm nay</div>
+            <div class="stat-icon orange">📦</div>
+          </div>
+          <div class="stat-value">26</div>
+          <div class="stat-change up">▲ +6 so với hôm qua</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-top">
+            <div class="stat-label">Đang xử lý</div>
+            <div class="stat-icon blue">🧰</div>
+          </div>
+          <div class="stat-value">14</div>
+          <div class="stat-change up">▲ 4 đơn đang đóng gói</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-top">
+            <div class="stat-label">Đang giao</div>
+            <div class="stat-icon green">🚚</div>
+          </div>
+          <div class="stat-value">31</div>
+          <div class="stat-change up">▲ 91% đúng tuyến</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-top">
+            <div class="stat-label">Trễ SLA</div>
+            <div class="stat-icon yellow">⏰</div>
+          </div>
+          <div class="stat-value">3</div>
+          <div class="stat-change down">▼ Cần ưu tiên ngay</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📦 Danh sách đơn hàng</div>
+          <div class="card-action" onclick="openCreateModal('orders')">+ Tạo đơn</div>
+        </div>
+        <div class="table-toolbar">
+          <input
+            class="search-input"
+            id="order-search"
+            placeholder="🔍  Tìm mã đơn, khách hàng, điểm giao..."
+            oninput="setOrderSearch(this.value)"
+          />
+          <button id="order-filter-all" class="filter-btn active" onclick="setOrderFilter('all')">Tất cả</button>
+          <button id="order-filter-new" class="filter-btn" onclick="setOrderFilter('new')">Mới</button>
+          <button id="order-filter-shipping" class="filter-btn" onclick="setOrderFilter('shipping')">Đang giao</button>
+          <button id="order-filter-delay" class="filter-btn" onclick="setOrderFilter('delay')">Trễ SLA</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Mã đơn</th>
+              <th>Khách hàng</th>
+              <th>Tuyến giao</th>
+              <th>Giá trị</th>
+              <th>Ưu tiên</th>
+              <th>Trạng thái</th>
+              <th>SLA</th>
+            </tr>
+          </thead>
+          <tbody id="orders-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="trips-view" style="display:none">
+      <div class="stats-row">
+        <div class="stat-card orange"><div class="stat-top"><div class="stat-label">Chuyến hôm nay</div><div class="stat-icon orange">🚚</div></div><div class="stat-value">47</div><div class="stat-change up">▲ +12%</div></div>
+        <div class="stat-card blue"><div class="stat-top"><div class="stat-label">Đang chạy</div><div class="stat-icon blue">🛰️</div></div><div class="stat-value">23</div><div class="stat-change up">▲ 3 xe</div></div>
+        <div class="stat-card green"><div class="stat-top"><div class="stat-label">Hoàn thành</div><div class="stat-icon green">✅</div></div><div class="stat-value">21</div><div class="stat-change up">▲ đúng hẹn 92%</div></div>
+        <div class="stat-card yellow"><div class="stat-top"><div class="stat-label">Sự cố</div><div class="stat-icon yellow">⚠️</div></div><div class="stat-value">3</div><div class="stat-change down">▼ cần xử lý</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">🚚 Điều hành chuyến xe</div><div class="card-action" onclick="openCreateModal('trips')">+ Tạo chuyến mới</div></div>
+        <table>
+          <thead><tr><th>Mã chuyến</th><th>Tuyến</th><th>Tài xế</th><th>Xe</th><th>Trạng thái</th><th>ETA</th></tr></thead>
+          <tbody id="trips-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="drivers-view" style="display:none">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">👤 Danh sách tài xế</div><div class="card-action" onclick="openCreateModal('drivers')">+ Thêm tài xế</div></div>
+          <div id="drivers-list"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">📌 Hiệu suất đội lái</div></div>
+          <table>
+            <thead><tr><th>Nhóm</th><th>Tài xế</th><th>Đúng giờ</th><th>Sự cố</th></tr></thead>
+            <tbody>
+              <tr><td>Ca sáng</td><td>8</td><td>96%</td><td>1</td></tr>
+              <tr><td>Ca chiều</td><td>7</td><td>91%</td><td>2</td></tr>
+              <tr><td>Ca tối</td><td>5</td><td>94%</td><td>0</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="costs-view" style="display:none">
+      <div class="stats-row">
+        <div class="stat-card red"><div class="stat-top"><div class="stat-label">Chi phí hôm nay</div><div class="stat-icon red">💰</div></div><div class="stat-value">42.6M</div><div class="stat-change down">▼ -4% so với hôm qua</div></div>
+        <div class="stat-card orange"><div class="stat-top"><div class="stat-label">Nhiên liệu</div><div class="stat-icon orange">⛽</div></div><div class="stat-value">28.1M</div><div class="stat-change up">▲ +3%</div></div>
+        <div class="stat-card yellow"><div class="stat-top"><div class="stat-label">Bảo trì</div><div class="stat-icon yellow">🔧</div></div><div class="stat-value">9.8M</div><div class="stat-change down">▼ -6%</div></div>
+        <div class="stat-card blue"><div class="stat-top"><div class="stat-label">Khác</div><div class="stat-icon blue">📊</div></div><div class="stat-value">4.7M</div><div class="stat-change up">▲ +1%</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">💰 Phân bổ chi phí</div><div class="card-action" onclick="openCreateModal('costs')">+ Tạo phiếu chi</div></div>
+        <table>
+          <thead><tr><th>Hạng mục</th><th>Thực tế</th><th>Ngân sách</th><th>Chênh lệch</th></tr></thead>
+          <tbody id="costs-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="invoices-view" style="display:none">
+      <div class="card">
+        <div class="card-header"><div class="card-title">🧾 Hóa đơn vận chuyển</div><div class="card-action" onclick="openCreateModal('invoices')">+ Tạo hóa đơn</div></div>
+        <table>
+          <thead><tr><th>Mã HĐ</th><th>Khách hàng</th><th>Số tiền</th><th>Ngày xuất</th><th>Trạng thái</th></tr></thead>
+          <tbody id="invoices-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="reports-view" style="display:none">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">📈 Báo cáo doanh thu</div><div class="card-action">Tháng này</div></div>
+          <div style="padding:20px">
+            <div class="chart-bars" style="height:120px;padding:0">
+              <div class="bar-group"><div class="bar primary" style="height:78px"></div></div>
+              <div class="bar-group"><div class="bar primary" style="height:92px"></div></div>
+              <div class="bar-group"><div class="bar primary" style="height:84px"></div></div>
+              <div class="bar-group"><div class="bar primary" style="height:104px"></div></div>
+              <div class="bar-group"><div class="bar primary" style="height:112px"></div></div>
+              <div class="bar-group"><div class="bar primary" style="height:119px"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">📊 KPI vận hành</div></div>
+          <table>
+            <thead><tr><th>KPI</th><th>Hiện tại</th><th>Mục tiêu</th></tr></thead>
+            <tbody>
+              <tr><td>Tỷ lệ đúng hẹn</td><td>91%</td><td>95%</td></tr>
+              <tr><td>Chi phí/chuyến</td><td>1.28M</td><td>1.20M</td></tr>
+              <tr><td>Tỷ lệ lấp đầy xe</td><td>84%</td><td>88%</td></tr>
+              <tr><td>Thời gian quay đầu</td><td>2.4h</td><td>2.0h</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="settings-view" style="display:none">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">⚙️ Cấu hình hệ thống</div></div>
+          <table>
+            <tbody>
+              <tr><td>Múi giờ</td><td>Asia/Ho_Chi_Minh</td></tr>
+              <tr><td>Tiền tệ</td><td>VND</td></tr>
+              <tr><td>Cập nhật vị trí</td><td>10 giây/lần</td></tr>
+              <tr><td>Ngưỡng cảnh báo ETA</td><td>15 phút</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">🔐 Bảo mật & người dùng</div></div>
+          <table>
+            <tbody>
+              <tr><td>2FA quản trị</td><td>Bật</td></tr>
+              <tr><td>Phiên đăng nhập</td><td>8 giờ</td></tr>
+              <tr><td>Phân quyền</td><td>Admin / Điều phối / Kế toán</td></tr>
+              <tr><td>Audit log</td><td>Đang ghi nhận</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <div id="vehicles-view" style="display:none">
       <div class="card" style="margin-bottom:16px;border-color:rgba(239,68,68,0.35);background:rgba(239,68,68,0.05);">
         <div style="padding:14px 16px;display:flex;align-items:flex-start;gap:10px">
@@ -1587,6 +2000,61 @@
       </div>
     </div>
   </div>
+  <div class="create-modal-overlay" id="create-modal-overlay">
+    <div class="create-modal">
+      <div class="create-modal-header">
+        <div class="create-modal-title" id="create-modal-title">Tạo mới</div>
+        <div class="create-modal-close" onclick="closeCreateModal()">✕</div>
+      </div>
+      <div class="create-modal-body">
+        <div class="create-grid" id="create-modal-fields"></div>
+        <div class="create-actions">
+          <button class="card-action" onclick="closeCreateModal()">Huỷ</button>
+          <button class="btn-primary" style="height:34px;padding:0 12px" onclick="submitCreateModal()">Lưu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="create-modal-overlay" id="profile-modal-overlay">
+    <div class="create-modal">
+      <div class="create-modal-header">
+        <div class="create-modal-title">Thông tin cá nhân</div>
+        <div class="create-modal-close" onclick="closeProfileModal()">✕</div>
+      </div>
+      <div class="create-modal-body">
+        <div class="profile-sections">
+          <div class="profile-section">
+            <div class="profile-section-title">👤 Cập nhật thông tin</div>
+            <div class="create-grid">
+              <div class="create-field"><label>Họ và tên</label><input id="profile-name" value="Trần Nam" /></div>
+              <div class="create-field"><label>Vai trò</label><input id="profile-role" value="Quản trị viên" /></div>
+              <div class="create-field"><label>Email</label><input id="profile-email" value="tran.nam@logiflow.vn" /></div>
+              <div class="create-field"><label>Số điện thoại</label><input id="profile-phone" value="0909 123 456" /></div>
+            </div>
+            <div class="create-actions" style="margin-top:10px">
+              <button class="btn-primary" style="height:34px;padding:0 12px" onclick="saveProfileInfo()">Lưu thông tin</button>
+            </div>
+          </div>
+          <div class="profile-section">
+            <div class="profile-section-title">🔐 Đổi mật khẩu</div>
+            <div class="create-grid">
+              <div class="create-field"><label>Mật khẩu hiện tại</label><input id="profile-old-pass" type="password" /></div>
+              <div class="create-field"><label>Mật khẩu mới</label><input id="profile-new-pass" type="password" /></div>
+            </div>
+            <div class="create-field" style="margin-top:10px">
+              <label>Xác nhận mật khẩu mới</label>
+              <input id="profile-confirm-pass" type="password" />
+            </div>
+            <div class="profile-note">Mật khẩu tối thiểu 8 ký tự, gồm chữ và số.</div>
+            <div class="create-actions" style="margin-top:10px">
+              <button class="card-action" onclick="closeProfileModal()">Huỷ</button>
+              <button class="btn-primary" style="height:34px;padding:0 12px" onclick="changePassword()">Đổi mật khẩu</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 
 <script>
@@ -1595,6 +2063,56 @@
   let currentMainView = "dashboard";
   let vehicleFilter = "all";
   let vehicleSearch = "";
+  let orderFilter = "all";
+  let orderSearch = "";
+  let notificationsOpen = false;
+  let currentTheme = "dark";
+  let createMode = "trips";
+  const tripsData = [
+    { id: "VT-2401", route: "HCM → Bình Dương", driver: "Nguyễn Văn A", vehicle: "51C-123.45", status: "moving", statusText: "Đang chạy", eta: "14:30" },
+    { id: "VT-2402", route: "HCM → Long An", driver: "Trần Văn B", vehicle: "51D-456.78", status: "moving", statusText: "Đang chạy", eta: "15:15" },
+    { id: "VT-2403", route: "HCM → Đồng Nai", driver: "Lê Thị C", vehicle: "51E-789.01", status: "done", statusText: "Hoàn thành", eta: "13:45" }
+  ];
+  const driversData = [
+    { name: "Nguyễn Văn A", trips: "7 chuyến hôm nay", score: "4.9", grade: "a", color: "var(--accent2)" },
+    { name: "Trần Văn B", trips: "6 chuyến hôm nay", score: "4.8", grade: "a", color: "#4499ff" },
+    { name: "Lê Thị C", trips: "5 chuyến hôm nay", score: "4.6", grade: "b", color: "#22c55e" },
+    { name: "Phạm Văn D", trips: "4 chuyến hôm nay", score: "4.5", grade: "b", color: "#8b5cf6" }
+  ];
+  const costsData = [
+    { category: "Nhiên liệu", actual: "196M", budget: "180M", delta: "+16M", deltaColor: "var(--red)" },
+    { category: "Bảo trì", actual: "72M", budget: "80M", delta: "-8M", deltaColor: "var(--green)" },
+    { category: "Lương tài xế", actual: "128M", budget: "130M", delta: "-2M", deltaColor: "var(--green)" },
+    { category: "Khác", actual: "24M", budget: "20M", delta: "+4M", deltaColor: "var(--red)" }
+  ];
+  const invoicesData = [
+    { id: "INV-24031", customer: "VinMart Q1", amount: "18.4M", date: "20/03/2026", status: "done", statusText: "Đã thanh toán" },
+    { id: "INV-24032", customer: "Coopmart PMH", amount: "12.1M", date: "20/03/2026", status: "wait", statusText: "Chờ duyệt" },
+    { id: "INV-24033", customer: "FamilyMart Q3", amount: "9.6M", date: "19/03/2026", status: "issue", statusText: "Quá hạn" }
+  ];
+  const mapVehicles = [
+    { plate: "51C-123.45", driver: "Nguyễn Văn A", route: "Q1 → Bình Dương", status: "active", statusText: "Đang chạy", eta: "14:30", speed: "42 km/h" },
+    { plate: "51D-456.78", driver: "Trần Văn B", route: "Thủ Đức → Long An", status: "active", statusText: "Đang chạy", eta: "15:15", speed: "38 km/h" },
+    { plate: "51E-789.01", driver: "Lê Thị C", route: "Q7 → Đồng Nai", status: "idle", statusText: "Dừng tạm", eta: "16:00", speed: "0 km/h" },
+    { plate: "51G-234.56", driver: "—", route: "Q4 → Vũng Tàu", status: "active", statusText: "Đang chạy", eta: "17:05", speed: "45 km/h" },
+    { plate: "51H-567.89", driver: "Phạm Văn D", route: "Bình Dương → Q1", status: "active", statusText: "Đang chạy", eta: "13:55", speed: "51 km/h" },
+    { plate: "51K-890.12", driver: "—", route: "KCN VSIP", status: "idle", statusText: "Dừng tạm", eta: "—", speed: "0 km/h" }
+  ];
+  const ordersData = [
+    { id: "OD-240301", customer: "VinMart Q1", route: "Kho Thủ Đức → Q1", amount: "12.4M", priority: "Cao", status: "new", statusText: "Mới tạo", sla: "16:30" },
+    { id: "OD-240302", customer: "Coopmart PMH", route: "Kho Bình Dương → Q7", amount: "8.1M", priority: "TB", status: "processing", statusText: "Đang xử lý", sla: "17:10" },
+    { id: "OD-240303", customer: "GS25 Đồng Khởi", route: "Kho Q12 → Q1", amount: "3.7M", priority: "Cao", status: "shipping", statusText: "Đang giao", sla: "15:45" },
+    { id: "OD-240304", customer: "Bách Hóa Xanh Q4", route: "Kho Nhà Bè → Q4", amount: "6.2M", priority: "TB", status: "shipping", statusText: "Đang giao", sla: "18:00" },
+    { id: "OD-240305", customer: "FamilyMart Q3", route: "Kho Thủ Đức → Q3", amount: "4.9M", priority: "Thấp", status: "done", statusText: "Hoàn thành", sla: "Đúng hạn" },
+    { id: "OD-240306", customer: "Circle K Tân Bình", route: "Kho Q12 → Tân Bình", amount: "5.8M", priority: "Cao", status: "delay", statusText: "Trễ SLA", sla: "Trễ 35p" }
+  ];
+  const notificationsData = [
+    { level: "high", title: "Xe 51G-234 quá hạn bảo trì", text: "Đã quá hạn 12 ngày. Cần lên lịch ngay để tránh gián đoạn.", time: "2 phút trước" },
+    { level: "medium", title: "Đơn OD-240306 trễ SLA", text: "Đơn Circle K Tân Bình đang trễ 35 phút so với cam kết.", time: "8 phút trước" },
+    { level: "low", title: "Hóa đơn INV-24031 đã thanh toán", text: "Khách hàng VinMart Q1 đã thanh toán đầy đủ.", time: "15 phút trước" },
+    { level: "medium", title: "Chuyến VT-2404 chờ xuất phát", text: "Chuyến đi Tây Ninh chưa được gán thời gian bốc hàng.", time: "22 phút trước" },
+    { level: "low", title: "Bản đồ xe cập nhật thành công", text: "18 xe online đã đồng bộ vị trí mới nhất.", time: "30 phút trước" }
+  ];
 
   const dashboardPeriods = {
     today: {
@@ -1936,6 +2454,316 @@
     }
   }
 
+  function renderMapView() {
+    const wrap = document.getElementById("map-vehicle-list");
+    if (!wrap) return;
+    wrap.innerHTML = mapVehicles.map((v) => `
+      <div class="fleet-item">
+        <div class="vehicle-id">${v.plate.split(".")[0]}</div>
+        <div class="vehicle-info">
+          <div class="vehicle-driver">${v.driver === "—" ? "Chưa gán tài xế" : v.driver}</div>
+          <div class="vehicle-route">${v.route} · ETA ${v.eta}</div>
+        </div>
+        <div class="fuel-bar">
+          <div class="fuel-label"><span>${v.statusText}</span><span>${v.speed}</span></div>
+          <div class="fuel-track">
+            <div class="fuel-fill ${v.status === "active" ? "high" : "mid"}" style="width:${v.status === "active" ? "88%" : "42%"}"></div>
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function updateOrderFilterButtons() {
+    const map = {
+      all: document.getElementById("order-filter-all"),
+      new: document.getElementById("order-filter-new"),
+      shipping: document.getElementById("order-filter-shipping"),
+      delay: document.getElementById("order-filter-delay")
+    };
+    Object.entries(map).forEach(([key, btn]) => {
+      if (!btn) return;
+      btn.classList.toggle("active", key === orderFilter);
+    });
+  }
+
+  function getFilteredOrders() {
+    return ordersData.filter((o) => {
+      const q = `${o.id} ${o.customer} ${o.route} ${o.statusText}`.toLowerCase();
+      if (!q.includes(orderSearch.trim().toLowerCase())) return false;
+      if (orderFilter === "new") return o.status === "new" || o.status === "processing";
+      if (orderFilter === "shipping") return o.status === "shipping";
+      if (orderFilter === "delay") return o.status === "delay";
+      return true;
+    });
+  }
+
+  function orderBadgeClass(status) {
+    if (status === "new") return "wait";
+    if (status === "processing") return "moving";
+    if (status === "shipping") return "moving";
+    if (status === "done") return "done";
+    return "issue";
+  }
+
+  function renderOrdersView() {
+    const tbody = document.getElementById("orders-table-body");
+    if (!tbody) return;
+    updateOrderFilterButtons();
+    const rows = getFilteredOrders();
+    if (!rows.length) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:16px">Không tìm thấy đơn hàng phù hợp.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = rows.map((o) => `
+      <tr>
+        <td><span class="order-id">#${o.id}</span></td>
+        <td>${o.customer}</td>
+        <td>${o.route}</td>
+        <td>${o.amount}</td>
+        <td>${o.priority}</td>
+        <td><span class="status-badge ${orderBadgeClass(o.status)}"><span class="status-dot"></span>${o.statusText}</span></td>
+        <td>${o.sla}</td>
+      </tr>
+    `).join("");
+  }
+
+  function setOrderFilter(filter) {
+    orderFilter = filter;
+    renderOrdersView();
+  }
+
+  function setOrderSearch(value) {
+    orderSearch = value || "";
+    renderOrdersView();
+  }
+
+  function applyTheme(theme) {
+    currentTheme = theme === "light" ? "light" : "dark";
+    const body = document.body;
+    const themeBtn = document.getElementById("theme-btn");
+    if (currentTheme === "light") {
+      body.classList.add("light-theme");
+      if (themeBtn) themeBtn.textContent = "☀️";
+    } else {
+      body.classList.remove("light-theme");
+      if (themeBtn) themeBtn.textContent = "🌙";
+    }
+    localStorage.setItem("logiflow-theme", currentTheme);
+  }
+
+  function initTheme() {
+    const saved = localStorage.getItem("logiflow-theme");
+    applyTheme(saved || "dark");
+  }
+
+  function toggleTheme() {
+    applyTheme(currentTheme === "dark" ? "light" : "dark");
+  }
+
+  function goDashboard() {
+    const navItem = document.querySelector('nav .nav-item[data-main-view="dashboard"]');
+    switchMainView("dashboard", navItem);
+  }
+
+  function renderTripsView() {
+    const tbody = document.getElementById("trips-table-body");
+    if (!tbody) return;
+    tbody.innerHTML = tripsData.map((t) => `
+      <tr>
+        <td><span class="order-id">#${t.id}</span></td>
+        <td>${t.route}</td>
+        <td>${t.driver}</td>
+        <td>${t.vehicle}</td>
+        <td><span class="status-badge ${t.status}"><span class="status-dot"></span>${t.statusText}</span></td>
+        <td>${t.eta}</td>
+      </tr>
+    `).join("");
+  }
+
+  function renderDriversView() {
+    const wrap = document.getElementById("drivers-list");
+    if (!wrap) return;
+    wrap.innerHTML = driversData.map((d) => `
+      <div class="driver-item">
+        <div class="driver-avatar" style="background:${d.color}">${d.name.charAt(0)}</div>
+        <div><div class="driver-name">${d.name}</div><div class="driver-trips">${d.trips}</div></div>
+        <div class="driver-score ${d.grade}">${d.score}</div>
+      </div>
+    `).join("");
+  }
+
+  function renderCostsView() {
+    const tbody = document.getElementById("costs-table-body");
+    if (!tbody) return;
+    tbody.innerHTML = costsData.map((c) => `<tr><td>${c.category}</td><td>${c.actual}</td><td>${c.budget}</td><td style="color:${c.deltaColor}">${c.delta}</td></tr>`).join("");
+  }
+
+  function renderInvoicesView() {
+    const tbody = document.getElementById("invoices-table-body");
+    if (!tbody) return;
+    tbody.innerHTML = invoicesData.map((i) => `
+      <tr>
+        <td><span class="order-id">${i.id}</span></td>
+        <td>${i.customer}</td>
+        <td>${i.amount}</td>
+        <td>${i.date}</td>
+        <td><span class="status-badge ${i.status}"><span class="status-dot"></span>${i.statusText}</span></td>
+      </tr>
+    `).join("");
+  }
+
+  function getCreateFields(mode) {
+    if (mode === "orders") return [{ k: "id", l: "Mã đơn" }, { k: "customer", l: "Khách hàng" }, { k: "route", l: "Tuyến giao" }, { k: "amount", l: "Giá trị (VD 5.2M)" }];
+    if (mode === "drivers") return [{ k: "name", l: "Tên tài xế" }, { k: "trips", l: "Thông tin chuyến" }, { k: "score", l: "Điểm đánh giá" }, { k: "color", l: "Màu avatar (hex)" }];
+    if (mode === "vehicles") return [{ k: "plate", l: "Biển số" }, { k: "type", l: "Loại xe" }, { k: "driver", l: "Tài xế" }, { k: "fuel", l: "Nhiên liệu (%)" }];
+    if (mode === "costs") return [{ k: "category", l: "Hạng mục" }, { k: "actual", l: "Thực tế" }, { k: "budget", l: "Ngân sách" }, { k: "delta", l: "Chênh lệch" }];
+    if (mode === "invoices") return [{ k: "id", l: "Mã HĐ" }, { k: "customer", l: "Khách hàng" }, { k: "amount", l: "Số tiền" }, { k: "date", l: "Ngày xuất" }];
+    return [{ k: "id", l: "Mã chuyến" }, { k: "route", l: "Tuyến" }, { k: "driver", l: "Tài xế" }, { k: "vehicle", l: "Xe" }];
+  }
+
+  function openCreateModal(forceMode) {
+    createMode = forceMode || currentMainView || "trips";
+    if (createMode === "dashboard" || createMode === "map" || createMode === "reports" || createMode === "settings") createMode = "trips";
+    const titleMap = { trips: "Tạo chuyến", orders: "Tạo đơn", drivers: "Thêm tài xế", vehicles: "Thêm xe", costs: "Tạo phiếu chi", invoices: "Tạo hóa đơn" };
+    const titleEl = document.getElementById("create-modal-title");
+    const fieldsWrap = document.getElementById("create-modal-fields");
+    if (titleEl) titleEl.textContent = titleMap[createMode] || "Tạo mới";
+    if (fieldsWrap) {
+      fieldsWrap.innerHTML = getCreateFields(createMode).map((f) => `
+        <div class="create-field">
+          <label>${f.l}</label>
+          <input data-key="${f.k}" />
+        </div>
+      `).join("");
+    }
+    document.getElementById("create-modal-overlay")?.classList.add("open");
+  }
+
+  function closeCreateModal() {
+    document.getElementById("create-modal-overlay")?.classList.remove("open");
+  }
+
+  function openProfileModal() {
+    document.getElementById("profile-modal-overlay")?.classList.add("open");
+  }
+
+  function closeProfileModal() {
+    document.getElementById("profile-modal-overlay")?.classList.remove("open");
+  }
+
+  function saveProfileInfo() {
+    const name = document.getElementById("profile-name")?.value?.trim() || "Trần Nam";
+    const role = document.getElementById("profile-role")?.value?.trim() || "Quản trị viên";
+    const avatar = document.getElementById("sidebar-avatar");
+    const sidebarName = document.getElementById("sidebar-name");
+    const sidebarRole = document.getElementById("sidebar-role");
+    if (sidebarName) sidebarName.textContent = name;
+    if (sidebarRole) sidebarRole.textContent = role;
+    if (avatar) {
+      const tokens = name.split(" ").filter(Boolean);
+      const first = tokens[0]?.charAt(0) || "T";
+      const last = tokens[tokens.length - 1]?.charAt(0) || "N";
+      avatar.textContent = `${first}${last}`.toUpperCase();
+    }
+    closeProfileModal();
+  }
+
+  function changePassword() {
+    const oldPass = document.getElementById("profile-old-pass")?.value || "";
+    const newPass = document.getElementById("profile-new-pass")?.value || "";
+    const confirm = document.getElementById("profile-confirm-pass")?.value || "";
+    if (!oldPass || !newPass || !confirm) {
+      alert("Vui lòng nhập đầy đủ thông tin mật khẩu.");
+      return;
+    }
+    if (newPass.length < 8) {
+      alert("Mật khẩu mới phải có ít nhất 8 ký tự.");
+      return;
+    }
+    if (newPass !== confirm) {
+      alert("Xác nhận mật khẩu không khớp.");
+      return;
+    }
+    document.getElementById("profile-old-pass").value = "";
+    document.getElementById("profile-new-pass").value = "";
+    document.getElementById("profile-confirm-pass").value = "";
+    alert("Đổi mật khẩu thành công.");
+    closeProfileModal();
+  }
+
+  function submitCreateModal() {
+    const fieldsWrap = document.getElementById("create-modal-fields");
+    if (!fieldsWrap) return;
+    const values = {};
+    fieldsWrap.querySelectorAll("input").forEach((input) => { values[input.dataset.key] = input.value.trim(); });
+    if (createMode === "orders") {
+      ordersData.unshift({ id: values.id || `OD-${Date.now().toString().slice(-6)}`, customer: values.customer || "Khách mới", route: values.route || "Chưa cập nhật", amount: values.amount || "0M", priority: "TB", status: "new", statusText: "Mới tạo", sla: "Chờ gán" });
+      renderOrdersView();
+    } else if (createMode === "drivers") {
+      driversData.unshift({ name: values.name || "Tài xế mới", trips: values.trips || "0 chuyến hôm nay", score: values.score || "4.5", grade: "b", color: values.color || "#60a5fa" });
+      renderDriversView();
+    } else if (createMode === "vehicles") {
+      const fuelNum = Number(values.fuel || 0);
+      vehicleModuleData.vehicles.unshift({ plate: values.plate || "51X-000.00", type: values.type || "Xe tải", iconType: "truck", statusClass: "badge-idle", statusText: "Chờ", driver: values.driver || "— Không có", fuel: Number.isFinite(fuelNum) ? fuelNum : 0, fuelColor: "var(--yellow)", odo: "0", maintClass: "maint-ok", maintenance: "✓ Mới thêm", maintenanceSub: "Chưa có lịch bảo trì" });
+      renderVehicleTable();
+    } else if (createMode === "costs") {
+      costsData.unshift({ category: values.category || "Mục mới", actual: values.actual || "0M", budget: values.budget || "0M", delta: values.delta || "0M", deltaColor: (values.delta || "").startsWith("-") ? "var(--green)" : "var(--red)" });
+      renderCostsView();
+    } else if (createMode === "invoices") {
+      invoicesData.unshift({ id: values.id || `INV-${Date.now().toString().slice(-5)}`, customer: values.customer || "Khách mới", amount: values.amount || "0M", date: values.date || "Hôm nay", status: "wait", statusText: "Chờ duyệt" });
+      renderInvoicesView();
+    } else {
+      tripsData.unshift({ id: values.id || `VT-${Date.now().toString().slice(-4)}`, route: values.route || "Chưa cập nhật", driver: values.driver || "Chưa gán", vehicle: values.vehicle || "—", status: "wait", statusText: "Chờ xuất phát", eta: "Chờ gán" });
+      renderTripsView();
+    }
+    closeCreateModal();
+  }
+
+  function renderNotifications() {
+    const list = document.getElementById("notif-list");
+    if (!list) return;
+    list.innerHTML = notificationsData.map((n) => `
+      <div class="notif-item">
+        <div class="notif-item-dot ${n.level}"></div>
+        <div class="notif-item-body">
+          <div class="notif-item-title">${n.title}</div>
+          <div class="notif-item-text">${n.text}</div>
+          <div class="notif-item-time">${n.time}</div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function toggleNotifications(event) {
+    if (event) event.stopPropagation();
+    const panel = document.getElementById("notif-panel");
+    if (!panel) return;
+    notificationsOpen = !notificationsOpen;
+    panel.classList.toggle("open", notificationsOpen);
+    if (notificationsOpen) renderNotifications();
+  }
+
+  function markAllNotificationsRead() {
+    const dot = document.getElementById("notif-dot");
+    if (dot) dot.classList.add("hidden");
+    const panel = document.getElementById("notif-panel");
+    notificationsOpen = false;
+    if (panel) panel.classList.remove("open");
+  }
+
+  document.addEventListener("click", (e) => {
+    const panel = document.getElementById("notif-panel");
+    const btn = document.getElementById("notif-btn");
+    if (!panel || !btn || !notificationsOpen) return;
+    const target = e.target;
+    if (panel.contains(target) || btn.contains(target)) return;
+    notificationsOpen = false;
+    panel.classList.remove("open");
+  });
+
+  initTheme();
+
   function switchMainView(view, clickedNav) {
     currentMainView = view;
     document.querySelectorAll("nav .nav-item").forEach(item => item.classList.remove("active"));
@@ -1943,16 +2771,95 @@
 
     const pageTitle = document.querySelector(".page-title");
     const navPills = document.querySelector(".nav-pills");
-    const createBtn = document.querySelector(".btn-primary");
+    const createBtn = document.getElementById("primary-action-btn");
     const dashboardView = document.getElementById("dashboard-view");
+    const mapView = document.getElementById("map-view");
+    const ordersView = document.getElementById("orders-view");
+    const tripsView = document.getElementById("trips-view");
+    const driversView = document.getElementById("drivers-view");
+    const costsView = document.getElementById("costs-view");
+    const invoicesView = document.getElementById("invoices-view");
+    const reportsView = document.getElementById("reports-view");
+    const settingsView = document.getElementById("settings-view");
     const vehiclesView = document.getElementById("vehicles-view");
+    const allViews = [dashboardView, mapView, ordersView, tripsView, driversView, vehiclesView, costsView, invoicesView, reportsView, settingsView];
+    allViews.forEach((v) => { if (v) v.style.display = "none"; });
+
+    if (view === "map") {
+      if (pageTitle) pageTitle.textContent = "Bản đồ xe";
+      if (navPills) navPills.style.display = "none";
+      if (createBtn) createBtn.textContent = "+ Tạo vùng theo dõi";
+      if (mapView) mapView.style.display = "block";
+      renderMapView();
+      return;
+    }
+
+    if (view === "orders") {
+      if (pageTitle) pageTitle.textContent = "Đơn hàng";
+      if (navPills) navPills.style.display = "none";
+      if (createBtn) createBtn.textContent = "+ Tạo đơn";
+      if (ordersView) ordersView.style.display = "block";
+      renderOrdersView();
+      return;
+    }
+
+    if (view === "trips") {
+      if (pageTitle) pageTitle.textContent = "Chuyến xe";
+      if (navPills) navPills.style.display = "none";
+      if (createBtn) createBtn.textContent = "+ Tạo chuyến";
+      if (tripsView) tripsView.style.display = "block";
+      renderTripsView();
+      return;
+    }
+
+    if (view === "drivers") {
+      if (pageTitle) pageTitle.textContent = "Tài xế";
+      if (navPills) navPills.style.display = "none";
+      if (createBtn) createBtn.textContent = "+ Thêm tài xế";
+      if (driversView) driversView.style.display = "block";
+      renderDriversView();
+      return;
+    }
 
     if (view === "vehicles") {
       if (pageTitle) pageTitle.textContent = "Phương tiện";
       if (navPills) navPills.style.display = "none";
       if (createBtn) createBtn.textContent = "+ Thêm xe";
-      if (dashboardView) dashboardView.style.display = "none";
       if (vehiclesView) vehiclesView.style.display = "block";
+      return;
+    }
+
+    if (view === "costs") {
+      if (pageTitle) pageTitle.textContent = "Chi phí";
+      if (navPills) navPills.style.display = "none";
+      if (createBtn) createBtn.textContent = "+ Tạo phiếu chi";
+      if (costsView) costsView.style.display = "block";
+      renderCostsView();
+      return;
+    }
+
+    if (view === "invoices") {
+      if (pageTitle) pageTitle.textContent = "Hóa đơn";
+      if (navPills) navPills.style.display = "none";
+      if (createBtn) createBtn.textContent = "+ Tạo hóa đơn";
+      if (invoicesView) invoicesView.style.display = "block";
+      renderInvoicesView();
+      return;
+    }
+
+    if (view === "reports") {
+      if (pageTitle) pageTitle.textContent = "Báo cáo";
+      if (navPills) navPills.style.display = "none";
+      if (createBtn) createBtn.textContent = "Xuất báo cáo";
+      if (reportsView) reportsView.style.display = "block";
+      return;
+    }
+
+    if (view === "settings") {
+      if (pageTitle) pageTitle.textContent = "Cài đặt";
+      if (navPills) navPills.style.display = "none";
+      if (createBtn) createBtn.textContent = "Lưu cài đặt";
+      if (settingsView) settingsView.style.display = "block";
       return;
     }
 
@@ -1960,7 +2867,6 @@
     if (navPills) navPills.style.display = "flex";
     if (createBtn) createBtn.textContent = "+ Tạo chuyến";
     if (dashboardView) dashboardView.style.display = "block";
-    if (vehiclesView) vehiclesView.style.display = "none";
   }
 </script>
 </body>
