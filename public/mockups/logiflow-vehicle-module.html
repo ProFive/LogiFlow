@@ -1031,7 +1031,7 @@ td { padding: 11px 16px; font-size: 12px; vertical-align: middle; }
   </div>
   <nav class="nav">
     <div class="nav-group-label">Tổng quan</div>
-    <div class="nav-item">📊 Dashboard</div>
+    <div class="nav-item" onclick="goToDashboard()">📊 Dashboard</div>
     <div class="nav-item">🗺️ Bản đồ xe</div>
     <div class="nav-group-label">Vận hành</div>
     <div class="nav-item">📦 Đơn hàng <span class="nav-badge">5</span></div>
@@ -1123,14 +1123,6 @@ td { padding: 11px 16px; font-size: 12px; vertical-align: middle; }
         </div>
         <div class="sc-value">2.840L</div>
         <div class="sc-sub down">▲ +5% vs tuần trước</div>
-      </div>
-      <div class="stat-card red">
-        <div class="sc-top">
-          <div class="sc-label">Chi phí bảo trì/tháng</div>
-          <div class="sc-icon red">💰</div>
-        </div>
-        <div class="sc-value">28.4M</div>
-        <div class="sc-sub down">▼ -8% vs tháng trước</div>
       </div>
     </div>
 
@@ -1793,6 +1785,10 @@ function switchTab(el, tab) {
     maintenance: '🔧 Lịch bảo trì chi tiết'
   };
   showToast(msgs[tab] || 'Tab đã chuyển');
+}
+
+function goToDashboard() {
+  window.location.href = "/mockups/logistics-dashboard.html";
 }
 
 function toggleFilter(btn, filter) {

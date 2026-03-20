@@ -353,6 +353,100 @@
 
   .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
+  /* VEHICLE TABLE (match vehicle module layout) */
+  .table-toolbar {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .search-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+    color: var(--text);
+    outline: none;
+    font-family: inherit;
+  }
+  .search-input:focus { border-color: var(--accent2); }
+  .filter-btn {
+    background: rgba(249,115,22,0.1);
+    border: 1px solid transparent;
+    border-radius: 7px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    padding: 6px 9px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .filter-btn.active {
+    border-color: var(--accent);
+    background: rgba(249,115,22,0.2);
+    color: var(--text);
+  }
+  .vehicle-id-cell { display: flex; align-items: center; gap: 10px; }
+  .vehicle-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .vehicle-icon.truck { background: rgba(68,153,255,0.12); }
+  .vehicle-icon.van { background: rgba(168,224,68,0.12); }
+  .vehicle-icon.mini { background: rgba(255,140,0,0.12); }
+  .plate {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .model { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .driver-cell { display: flex; align-items: center; gap: 7px; font-size: 12px; }
+  .driver-ava-sm {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 800;
+    color: #000;
+  }
+  .fuel-cell { min-width: 110px; }
+  .fuel-bar-wrap { display: flex; align-items: center; gap: 6px; }
+  .fuel-pct { font-size: 11px; font-weight: 700; width: 34px; }
+  .fuel-track {
+    flex: 1;
+    height: 5px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .fuel-fill { height: 100%; border-radius: 3px; }
+  .fuel-fill.high { background: var(--accent); }
+  .fuel-fill.mid { background: var(--yellow); }
+  .fuel-fill.low { background: var(--red); }
+  .km-cell { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; }
+  .maint-cell { font-size: 11px; }
+  .maint-ok { color: var(--green); font-weight: 700; }
+  .maint-soon { color: var(--yellow); font-weight: 700; }
+  .maint-overdue { color: var(--red); font-weight: 700; }
+  .maint-days { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .status-badge.badge-running { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
+  .status-badge.badge-idle { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
+  .status-badge.badge-maintenance { background: rgba(249,115,22,0.15); color: #fb923c; border: 1px solid rgba(249,115,22,0.25); }
+  .status-badge.badge-broken { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+
   /* MAP CARD */
   .map-card { position: relative; }
 
@@ -583,6 +677,226 @@
   .alert-text { font-size: 12px; line-height: 1.5; }
   .alert-time { font-size: 10px; color: var(--muted); margin-top: 2px; }
 
+  /* VEHICLE MAINT LIST (match vehicle module layout) */
+  .maint-list { padding: 0; }
+  .maint-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.12s;
+  }
+  .maint-item:last-child { border-bottom: none; }
+  .maint-item:hover { background: var(--surface2); }
+  .maint-item-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .mi-urgent { background: rgba(239,68,68,0.15); }
+  .mi-soon { background: rgba(234,179,8,0.15); }
+  .mi-ok { background: rgba(34,197,94,0.15); }
+  .maint-item-info { flex: 1; min-width: 0; }
+  .maint-item-plate { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; }
+  .maint-item-type { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .maint-item-right { text-align: right; flex-shrink: 0; }
+  .maint-due { font-size: 11px; font-weight: 700; }
+  .maint-due.urgent { color: var(--red); }
+  .maint-due.soon { color: var(--yellow); }
+  .maint-due.ok { color: var(--green); }
+  .maint-km { font-size: 9px; color: var(--muted); margin-top: 2px; }
+  .sched-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--muted2);
+    padding: 3px 8px;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 5px;
+  }
+  .sched-btn.scheduled {
+    color: var(--green);
+    border-color: rgba(34,197,94,0.3);
+    background: rgba(34,197,94,0.08);
+  }
+
+  /* VEHICLE BOTTOM GRID (match vehicle module layout) */
+  .grid-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  .fuel-chart-body { padding: 16px 20px; }
+  .fuel-bars-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 100px;
+    margin-bottom: 8px;
+  }
+  .fc-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .fc-bar {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    min-width: 18px;
+    position: relative;
+    transition: opacity 0.2s;
+  }
+  .fc-bar.consumed { background: var(--orange); }
+  .fc-bar.refueled { background: var(--accent2); opacity: 0.55; }
+  .fc-label { font-size: 9px; color: var(--muted); text-align: center; }
+  .fuel-legend { display: flex; gap: 12px; margin-top: 8px; }
+  .fl-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--muted); }
+  .fl-dot { width: 8px; height: 8px; border-radius: 2px; }
+  .fuel-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .fs-item { background: var(--surface2); border-radius: 8px; padding: 10px 12px; }
+  .fs-val { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: var(--accent2); }
+  .fs-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+
+  .dispatch-board-body { padding: 0; }
+  .dispatch-slot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.12s;
+  }
+  .dispatch-slot:last-child { border-bottom: none; }
+  .dispatch-slot:hover { background: var(--surface2); }
+  .ds-time { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--muted); width: 44px; flex-shrink: 0; }
+  .ds-bar { width: 3px; height: 40px; border-radius: 2px; flex-shrink: 0; }
+  .ds-info { flex: 1; }
+  .ds-route { font-size: 12px; font-weight: 700; }
+  .ds-meta { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .ds-vehicle {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 5px;
+    flex-shrink: 0;
+  }
+  .ds-change-btn {
+    width: 26px;
+    height: 26px;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--muted2);
+    flex-shrink: 0;
+  }
+  .drag-hint {
+    font-size: 10px;
+    color: var(--muted);
+    text-align: center;
+    padding: 10px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .schedule-body { padding: 0; }
+  .schedule-month {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sched-month-label { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; }
+  .sched-nav { display: flex; gap: 4px; }
+  .sched-nav-btn {
+    width: 24px;
+    height: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .calendar-mini { padding: 10px 16px 14px; }
+  .cal-days-header, .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .cal-days-header { margin-bottom: 4px; }
+  .cal-day-label {
+    text-align: center;
+    font-size: 9px;
+    color: var(--muted);
+    font-weight: 700;
+    padding: 3px 0;
+    text-transform: uppercase;
+  }
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    border-radius: 5px;
+    position: relative;
+  }
+  .cal-day.today { background: rgba(249,115,22,0.2); color: var(--accent); font-weight: 800; }
+  .cal-day.has-event::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .cal-day.event-red { color: var(--red); }
+  .cal-day.event-orange { color: var(--yellow); }
+  .cal-day.event-green { color: var(--green); }
+  .cal-day.empty { opacity: 0; pointer-events: none; }
+  .upcoming-events { padding: 0 16px 14px; }
+  .ue-title {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .event-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+  }
+  .event-item:last-child { border-bottom: none; }
+  .event-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .event-date { color: var(--muted); width: 32px; flex-shrink: 0; }
+  .event-desc { flex: 1; font-weight: 500; }
+  .event-plate { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; color: var(--muted); }
+
   /* TABS */
   .tabs {
     display: flex; gap: 4px;
@@ -664,7 +978,7 @@
 
   <nav>
     <div class="nav-section">Tổng quan</div>
-    <div class="nav-item active">
+    <div class="nav-item active" data-main-view="dashboard" onclick="switchMainView('dashboard', this)">
       <span class="icon">📊</span> Dashboard
     </div>
     <div class="nav-item">
@@ -682,7 +996,7 @@
     <div class="nav-item">
       <span class="icon">👤</span> Tài xế
     </div>
-    <div class="nav-item">
+    <div class="nav-item" data-main-view="vehicles" onclick="switchMainView('vehicles', this)">
       <span class="icon">🚛</span> Phương tiện
     </div>
 
@@ -738,6 +1052,7 @@
   </header>
 
   <div class="content">
+    <div id="dashboard-view">
 
     <!-- STATS -->
     <div class="stats-row">
@@ -812,9 +1127,15 @@
 
         <!-- Orders Table -->
         <div class="tabs">
-          <div class="tab active">Chuyến đang chạy</div>
-          <div class="tab">Chờ xuất phát</div>
-          <div class="tab">Hoàn thành</div>
+          <div class="tab active" data-trip-filter="moving" onclick="setTripFilter('moving', this)">
+            Chuyến đang chạy (<span class="trip-count">0</span>)
+          </div>
+          <div class="tab" data-trip-filter="wait" onclick="setTripFilter('wait', this)">
+            Chờ xuất phát (<span class="trip-count">0</span>)
+          </div>
+          <div class="tab" data-trip-filter="done" onclick="setTripFilter('done', this)">
+            Hoàn thành (<span class="trip-count">0</span>)
+          </div>
         </div>
         <table>
           <thead>
@@ -1098,10 +1419,183 @@
       </div>
 
     </div>
+    </div>
+
+    <div id="vehicles-view" style="display:none">
+      <div class="card" style="margin-bottom:16px;border-color:rgba(239,68,68,0.35);background:rgba(239,68,68,0.05);">
+        <div style="padding:14px 16px;display:flex;align-items:flex-start;gap:10px">
+          <div class="alert-icon error" style="margin-top:0">🚨</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:700;color:#f87171;margin-bottom:4px">
+              3 xe cần bảo trì khẩn cấp — 51G-234 đã quá hạn 12 ngày!
+            </div>
+            <div style="font-size:12px;color:var(--muted2);line-height:1.5">
+              51G-234 (quá hạn), 51D-456 (còn 3 ngày), 51K-890 (đang sửa). Cần ưu tiên xử lý ngay để tránh gián đoạn vận hành.
+            </div>
+          </div>
+          <button class="card-action" style="white-space:nowrap" onclick="focusVehicleAlerts()">Xem chi tiết</button>
+        </div>
+      </div>
+
+      <div class="stats-row" id="vehicle-stats-row"></div>
+
+      <!-- MAIN GRID: table + alerts (side by side like vehicle module) -->
+      <div class="grid-2" style="margin-bottom:16px;grid-template-columns:1fr 360px">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🚛 Danh sách đội xe</div>
+            <div class="card-action">+ Thêm xe mới</div>
+          </div>
+          <div class="table-toolbar">
+            <input
+              class="search-input"
+              id="vehicle-search"
+              placeholder="🔍  Tìm biển số, tài xế..."
+              oninput="setVehicleSearch(this.value)"
+            />
+            <button id="vehicle-filter-all" class="filter-btn active" onclick="setVehicleFilter('all')">Tất cả (24)</button>
+            <button id="vehicle-filter-running" class="filter-btn" onclick="setVehicleFilter('running')">🟢 Đang chạy</button>
+            <button id="vehicle-filter-maint" class="filter-btn" onclick="setVehicleFilter('maint')">🟠 Bảo trì</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Biển số / Loại xe</th>
+                <th>Trạng thái</th>
+                <th>Tài xế</th>
+                <th>Nhiên liệu</th>
+                <th>ODO (km)</th>
+                <th>Bảo trì</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="vehicle-table-body"></tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🔧 Cảnh báo bảo trì</div>
+            <div class="card-action">Lên lịch tất cả</div>
+          </div>
+          <div class="maint-list" id="vehicle-alerts"></div>
+        </div>
+      </div>
+
+      <!-- BOTTOM GRID: fuel + dispatch + calendar -->
+      <div class="grid-bottom">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">⛽ Tiêu hao nhiên liệu</div>
+            <div style="font-size:11px;color:var(--muted)">7 ngày gần nhất</div>
+          </div>
+          <div class="fuel-chart-body">
+            <div class="fuel-bars-row">
+              <div class="fc-bar-wrap"><div class="fc-bar consumed" style="height:55px" data-val="380L"></div><div class="fc-label">T2</div></div>
+              <div class="fc-bar-wrap"><div class="fc-bar consumed" style="height:42px" data-val="290L"></div><div class="fc-label">T3</div></div>
+              <div class="fc-bar-wrap"><div class="fc-bar consumed" style="height:68px" data-val="470L"></div><div class="fc-label">T4</div></div>
+              <div class="fc-bar-wrap"><div class="fc-bar consumed" style="height:50px" data-val="345L"></div><div class="fc-label">T5</div></div>
+              <div class="fc-bar-wrap"><div class="fc-bar consumed" style="height:78px" data-val="540L"></div><div class="fc-label">T6</div></div>
+              <div class="fc-bar-wrap"><div class="fc-bar consumed" style="height:60px" data-val="415L"></div><div class="fc-label">T7</div></div>
+              <div class="fc-bar-wrap"><div class="fc-bar refueled" style="height:46px" data-val="400L"></div><div class="fc-label" style="color:var(--accent2)">CN</div></div>
+            </div>
+            <div class="fuel-legend">
+              <div class="fl-item"><div class="fl-dot" style="background:var(--orange)"></div>Tiêu thụ</div>
+              <div class="fl-item"><div class="fl-dot" style="background:var(--accent2);opacity:0.55"></div>Đổ thêm</div>
+            </div>
+            <div class="fuel-summary">
+              <div class="fs-item"><div class="fs-val">2,840L</div><div class="fs-label">Tổng tiêu thụ / tuần</div></div>
+              <div class="fs-item"><div class="fs-val" style="color:var(--orange)">118L/xe</div><div class="fs-label">Trung bình / xe</div></div>
+              <div class="fs-item"><div class="fs-val">84.2M đ</div><div class="fs-label">Chi phí nhiên liệu</div></div>
+              <div class="fs-item"><div class="fs-val" style="color:var(--red)">+5%</div><div class="fs-label">So với tuần trước</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🎯 Điều phối linh hoạt</div>
+            <div class="card-action">+ Tạo chuyến</div>
+          </div>
+          <div class="dispatch-board-body">
+            <div class="dispatch-slot">
+              <div class="ds-time">08:00</div><div class="ds-bar" style="background:var(--green)"></div>
+              <div class="ds-info"><div class="ds-route">Q1 → KCN Mỹ Phước</div><div class="ds-meta">Nguyễn Văn A · 45km · 280K đ</div></div>
+              <div class="ds-vehicle" style="background:rgba(34,197,94,0.15);color:var(--green)">51C-123</div><div class="ds-change-btn">⇄</div>
+            </div>
+            <div class="dispatch-slot">
+              <div class="ds-time">09:30</div><div class="ds-bar" style="background:#60a5fa"></div>
+              <div class="ds-info"><div class="ds-route">Thủ Đức → Long An</div><div class="ds-meta">Trần Văn B · 38km · 240K đ</div></div>
+              <div class="ds-vehicle" style="background:rgba(59,130,246,0.15);color:#60a5fa">51D-456</div><div class="ds-change-btn">⇄</div>
+            </div>
+            <div class="dispatch-slot" style="background:rgba(239,68,68,0.06)">
+              <div class="ds-time" style="color:var(--red)">11:00</div><div class="ds-bar" style="background:var(--red)"></div>
+              <div class="ds-info"><div class="ds-route">Q7 → Đồng Nai</div><div class="ds-meta" style="color:var(--red)">⚠ Chưa phân công xe!</div></div>
+              <div class="ds-vehicle" style="background:rgba(239,68,68,0.15);color:var(--red)">? Chưa xe</div><div class="ds-change-btn" style="border-color:rgba(239,68,68,0.3)">+ Xe</div>
+            </div>
+            <div class="dispatch-slot">
+              <div class="ds-time">13:30</div><div class="ds-bar" style="background:#8b5cf6"></div>
+              <div class="ds-info"><div class="ds-route">Bình Dương → Q1 (về)</div><div class="ds-meta">Phạm Văn D · 48km · 310K đ</div></div>
+              <div class="ds-vehicle" style="background:rgba(139,92,246,0.12);color:#8b5cf6">51H-567</div><div class="ds-change-btn">⇄</div>
+            </div>
+            <div class="dispatch-slot">
+              <div class="ds-time">15:00</div><div class="ds-bar" style="background:var(--accent)"></div>
+              <div class="ds-info"><div class="ds-route">Q4 → KCN Vsip</div><div class="ds-meta">Lê Thị C · 52km · 340K đ</div></div>
+              <div class="ds-vehicle" style="background:rgba(249,115,22,0.15);color:var(--accent)">51E-789</div><div class="ds-change-btn">⇄</div>
+            </div>
+          </div>
+          <div class="drag-hint">💡 Nhấn ⇄ để đổi xe linh hoạt · Kéo thả để sắp xếp lại</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📅 Lịch bảo trì</div>
+            <div class="card-action">Lên lịch</div>
+          </div>
+          <div class="schedule-body">
+            <div class="schedule-month">
+              <div class="sched-month-label">Tháng 3 / 2025</div>
+              <div class="sched-nav">
+                <div class="sched-nav-btn">‹</div>
+                <div class="sched-nav-btn">›</div>
+              </div>
+            </div>
+            <div class="calendar-mini">
+              <div class="cal-days-header">
+                <div class="cal-day-label">CN</div><div class="cal-day-label">T2</div><div class="cal-day-label">T3</div><div class="cal-day-label">T4</div><div class="cal-day-label">T5</div><div class="cal-day-label">T6</div><div class="cal-day-label">T7</div>
+              </div>
+              <div class="cal-grid">
+                <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day">1</div>
+                <div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div>
+                <div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day">15</div>
+                <div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day today">20</div>
+                <div class="cal-day has-event event-orange">21</div><div class="cal-day">22</div>
+                <div class="cal-day has-event event-green">23</div><div class="cal-day has-event event-red">24</div><div class="cal-day">25</div><div class="cal-day has-event event-orange">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day has-event event-green">30</div><div class="cal-day">31</div>
+                <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+              </div>
+            </div>
+            <div class="upcoming-events">
+              <div class="ue-title">Sự kiện sắp tới</div>
+              <div class="event-item"><div class="event-dot" style="background:var(--yellow)"></div><div class="event-date">21/03</div><div class="event-desc">Thay lốp</div><div class="event-plate">51D-456</div></div>
+              <div class="event-item"><div class="event-dot" style="background:var(--green)"></div><div class="event-date">23/03</div><div class="event-desc">Thay dầu + lọc</div><div class="event-plate">51C-123</div></div>
+              <div class="event-item"><div class="event-dot" style="background:var(--red)"></div><div class="event-date">24/03</div><div class="event-desc">Sửa động cơ</div><div class="event-plate">51K-890</div></div>
+              <div class="event-item"><div class="event-dot" style="background:var(--yellow)"></div><div class="event-date">26/03</div><div class="event-desc">Kiểm tra phanh</div><div class="event-plate">51H-567</div></div>
+              <div class="event-item"><div class="event-dot" style="background:var(--green)"></div><div class="event-date">30/03</div><div class="event-desc">Đăng kiểm định kỳ</div><div class="event-plate">51G-234</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </main>
 
 <script>
+  let currentPeriod = "today";
+  let currentTripFilter = "moving";
+  let currentMainView = "dashboard";
+  let vehicleFilter = "all";
+  let vehicleSearch = "";
+
   const dashboardPeriods = {
     today: {
       stats: [
@@ -1174,9 +1668,102 @@
     }
   };
 
+  const vehicleModuleData = {
+    stats: [
+      { label: "Tổng xe", value: "24", change: "▲ +2 xe tháng này", trend: "up", color: "orange", icon: "🚛" },
+      { label: "Đang hoạt động", value: "16", change: "67% đội xe", trend: "up", color: "blue", icon: "📍" },
+      { label: "Cần bảo trì", value: "3", change: "⚠ Cần xử lý ngay", trend: "down", color: "yellow", icon: "🔧" },
+      { label: "Tiêu hao XD tuần", value: "2.840L", change: "▲ +5% vs tuần trước", trend: "down", color: "orange", icon: "⛽" },
+    ],
+    vehicles: [
+      { plate: "51C-123.45", type: "Hino 500 · 10 tấn", iconType: "truck", statusClass: "badge-running", statusText: "Đang chạy", driver: "Nguyễn Văn A", driverInitial: "A", driverColor: "var(--accent2)", fuel: 78, fuelColor: "var(--accent2)", odo: "142,580", maintClass: "maint-ok", maintenance: "✓ Còn 18 ngày", maintenanceSub: "145,000 km · Thay dầu" },
+      { plate: "51D-456.78", type: "Hyundai Porter · 1.5 tấn", iconType: "van", statusClass: "badge-running", statusText: "Đang chạy", driver: "Trần Văn B", driverInitial: "B", driverColor: "#4499ff", fuel: 42, fuelColor: "var(--yellow)", odo: "88,240", maintClass: "maint-soon", maintenance: "⚠ Còn 3 ngày", maintenanceSub: "90,000 km · Thay lốp" },
+      { plate: "51E-789.01", type: "Isuzu NQR · 5 tấn", iconType: "truck", statusClass: "badge-idle", statusText: "Chờ", driver: "Lê Thị C", driverInitial: "C", driverColor: "#22c55e", fuel: 91, fuelColor: "var(--accent2)", odo: "203,100", maintClass: "maint-ok", maintenance: "✓ Còn 25 ngày", maintenanceSub: "205,000 km · Đại tu" },
+      { plate: "51G-234.56", type: "Kia K250 · 2.5 tấn", iconType: "mini", statusClass: "badge-maintenance", statusText: "Bảo trì", driver: "— Không có", fuel: 18, fuelColor: "var(--red)", odo: "67,850", odoClass: "maint-overdue", maintClass: "maint-overdue", maintenance: "🚨 Quá hạn 12 ngày", maintenanceSub: "65,000 km · Đăng kiểm", rowStyle: "background:rgba(239,68,68,0.06)" },
+      { plate: "51H-567.89", type: "Thaco Ollin · 7 tấn", iconType: "truck", statusClass: "badge-running", statusText: "Đang chạy", driver: "Phạm Văn D", driverInitial: "D", driverColor: "#8b5cf6", fuel: 55, fuelColor: "var(--yellow)", odo: "115,440", maintClass: "maint-ok", maintenance: "✓ Còn 31 ngày", maintenanceSub: "120,000 km · Thay dầu" },
+      { plate: "51K-890.12", type: "Ford Transit · 16 chỗ (hàng)", iconType: "van", statusClass: "badge-broken", statusText: "Hỏng", driver: "— Dừng hoạt động", fuel: null, fuelColor: "var(--muted)", odo: "31,200", odoClass: "maint-days", maintClass: "maint-overdue", maintenance: "🚨 Sửa chữa động cơ", maintenanceSub: "Dự kiến 7 ngày" }
+    ],
+    alerts: [
+      { iconClass: "mi-urgent", icon: "🚨", plate: "51G-234.56", type: "Đăng kiểm định kỳ", dueClass: "urgent", dueText: "Quá hạn 12 ngày", km: "67,850 km", button: "+ Đặt lịch ngay" },
+      { iconClass: "mi-soon", icon: "⚠️", plate: "51D-456.78", type: "Thay lốp — 90,000 km", dueClass: "soon", dueText: "Còn 3 ngày", km: "88,240 km (+1,760)", button: "+ Đặt lịch" },
+      { iconClass: "mi-soon", icon: "🔔", plate: "51K-890.12", type: "Sửa chữa động cơ", dueClass: "soon", dueText: "Đang sửa", km: "31,200 km", button: "✓ Đã lên lịch 24/03", scheduled: true },
+      { iconClass: "mi-ok", icon: "🟢", plate: "51H-567.89", type: "Thay dầu — 120,000 km", dueClass: "ok", dueText: "Còn 31 ngày", km: "115,440 km (+4,560)", button: "+ Đặt lịch" },
+      { iconClass: "mi-ok", icon: "🟢", plate: "51C-123.45", type: "Thay dầu — 145,000 km", dueClass: "ok", dueText: "Còn 18 ngày", km: "142,580 km (+2,420)", button: "+ Đặt lịch" }
+    ]
+  };
+
+  function renderTripsTable(period, filter) {
+    const data = dashboardPeriods[period];
+    if (!data) return;
+
+    const filteredTrips = data.trips.filter((trip) => {
+      if (filter === "moving") return trip.status === "moving" || trip.status === "issue";
+      if (filter === "wait") return trip.status === "wait";
+      if (filter === "done") return trip.status === "done";
+      return true;
+    });
+
+    const tbody = document.querySelector(".map-card table tbody");
+    if (!tbody) return;
+
+    if (filteredTrips.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align:center;color:var(--muted);padding:18px 20px;">
+            Không có chuyến phù hợp trong mục này.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = filteredTrips.map((t) => `
+      <tr>
+        <td><span class="order-id">#${t.id}</span></td>
+        <td>${t.route}</td>
+        <td>${t.driver}</td>
+        <td>${t.vehicle}</td>
+        <td><span class="status-badge ${t.status}"><span class="status-dot"></span>${t.text}</span></td>
+        <td>${t.eta}</td>
+      </tr>
+    `).join("");
+  }
+
+  function getTripsByFilter(period, filter) {
+    const data = dashboardPeriods[period];
+    if (!data) return [];
+    return data.trips.filter((trip) => {
+      if (filter === "moving") return trip.status === "moving" || trip.status === "issue";
+      if (filter === "wait") return trip.status === "wait";
+      if (filter === "done") return trip.status === "done";
+      return true;
+    });
+  }
+
+  function updateTripTabCounts(period) {
+    const tabs = document.querySelectorAll(".tabs .tab");
+    tabs.forEach((tab) => {
+      const filter = tab.getAttribute("data-trip-filter");
+      const countEl = tab.querySelector(".trip-count");
+      if (!filter || !countEl) return;
+      const count = getTripsByFilter(period, filter).length;
+      countEl.textContent = String(count);
+    });
+  }
+
+  function setTripFilter(filter, clickedTab) {
+    currentTripFilter = filter;
+
+    document.querySelectorAll(".tabs .tab").forEach(tab => tab.classList.remove("active"));
+    if (clickedTab) clickedTab.classList.add("active");
+
+    renderTripsTable(currentPeriod, currentTripFilter);
+  }
+
   function setDashboardPeriod(period, clickedPill) {
     const data = dashboardPeriods[period];
     if (!data) return;
+    currentPeriod = period;
 
     document.querySelectorAll(".nav-pill").forEach(p => p.classList.remove("active"));
     if (clickedPill) clickedPill.classList.add("active");
@@ -1197,19 +1784,8 @@
       }
     });
 
-    const tbody = document.querySelector(".map-card table tbody");
-    if (tbody) {
-      tbody.innerHTML = data.trips.map((t) => `
-        <tr>
-          <td><span class="order-id">#${t.id}</span></td>
-          <td>${t.route}</td>
-          <td>${t.driver}</td>
-          <td>${t.vehicle}</td>
-          <td><span class="status-badge ${t.status}"><span class="status-dot"></span>${t.text}</span></td>
-          <td>${t.eta}</td>
-        </tr>
-      `).join("");
-    }
+    updateTripTabCounts(currentPeriod);
+    renderTripsTable(currentPeriod, currentTripFilter);
 
     const revenueBars = document.querySelectorAll(".chart-bars .bar.primary");
     const costBars = document.querySelectorAll(".chart-bars .bar.secondary");
@@ -1232,6 +1808,159 @@
       if (blocks[1]) blocks[1].textContent = data.chart.profit;
       if (blocks[2]) blocks[2].textContent = data.chart.margin;
     }
+  }
+
+  updateTripTabCounts(currentPeriod);
+  renderVehicleView();
+
+  function updateVehicleFilterButtons() {
+    const buttonMap = {
+      all: document.getElementById("vehicle-filter-all"),
+      running: document.getElementById("vehicle-filter-running"),
+      maint: document.getElementById("vehicle-filter-maint")
+    };
+    Object.entries(buttonMap).forEach(([key, btn]) => {
+      if (!btn) return;
+      btn.classList.toggle("active", key === vehicleFilter);
+    });
+  }
+
+  function getFilteredVehicles() {
+    return vehicleModuleData.vehicles.filter((v) => {
+      const text = `${v.plate} ${v.type} ${v.driver} ${v.maintenance}`.toLowerCase();
+      const passSearch = text.includes(vehicleSearch.trim().toLowerCase());
+      if (!passSearch) return false;
+      if (vehicleFilter === "running") return v.statusClass === "badge-running" || v.statusClass === "badge-idle";
+      if (vehicleFilter === "maint") return v.statusClass === "badge-maintenance" || v.statusClass === "badge-broken";
+      return true;
+    });
+  }
+
+  function renderVehicleTable() {
+    const tableBody = document.getElementById("vehicle-table-body");
+    if (!tableBody) return;
+    const rows = getFilteredVehicles();
+    if (rows.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="7" style="text-align:center;color:var(--muted);padding:16px">Không tìm thấy phương tiện phù hợp.</td>
+        </tr>
+      `;
+      return;
+    }
+    tableBody.innerHTML = rows.map((v) => `
+      <tr style="${v.rowStyle || ""}">
+        <td>
+          <div class="vehicle-id-cell">
+            <div class="vehicle-icon ${v.iconType}">${v.iconType === "van" ? "🚐" : (v.iconType === "mini" ? "🚚" : "🚛")}</div>
+            <div><div class="plate">${v.plate}</div><div class="model">${v.type}</div></div>
+          </div>
+        </td>
+        <td><span class="status-badge ${v.statusClass}"><span class="status-dot"></span>${v.statusText}</span></td>
+        <td>
+          ${v.driverInitial
+            ? `<div class="driver-cell"><div class="driver-ava-sm" style="background:${v.driverColor}">${v.driverInitial}</div>${v.driver}</div>`
+            : `<div class="driver-cell" style="color:var(--muted)">${v.driver}</div>`
+          }
+        </td>
+        <td class="fuel-cell">
+          <div class="fuel-bar-wrap">
+            <span class="fuel-pct" style="color:${v.fuelColor}">${v.fuel === null ? "—" : `${v.fuel}%`}</span>
+            <div class="fuel-track"><div class="fuel-fill ${v.fuel === null ? "" : (v.fuel >= 70 ? "high" : (v.fuel >= 35 ? "mid" : "low"))}" style="width:${v.fuel === null ? 0 : v.fuel}%"></div></div>
+          </div>
+        </td>
+        <td class="km-cell ${v.odoClass || ""}">${v.odo}</td>
+        <td class="maint-cell">
+          <div class="${v.maintClass}">${v.maintenance}</div>
+          <div class="maint-days">${v.maintenanceSub}</div>
+        </td>
+        <td><span class="card-action" style="font-size:10px">Chi tiết</span></td>
+      </tr>
+    `).join("");
+  }
+
+  function setVehicleFilter(filter) {
+    vehicleFilter = filter;
+    updateVehicleFilterButtons();
+    renderVehicleTable();
+  }
+
+  function setVehicleSearch(value) {
+    vehicleSearch = value || "";
+    renderVehicleTable();
+  }
+
+  function focusVehicleAlerts() {
+    if (currentMainView !== "vehicles") {
+      const navItem = document.querySelector('nav .nav-item[data-main-view="vehicles"]');
+      switchMainView("vehicles", navItem);
+    }
+    const alerts = document.getElementById("vehicle-alerts");
+    if (alerts) alerts.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function renderVehicleView() {
+    const statsWrap = document.getElementById("vehicle-stats-row");
+    if (statsWrap) {
+      statsWrap.innerHTML = vehicleModuleData.stats.map((s) => `
+        <div class="stat-card ${s.color}">
+          <div class="stat-top">
+            <div class="stat-label">${s.label}</div>
+            <div class="stat-icon ${s.color}">${s.icon}</div>
+          </div>
+          <div class="stat-value">${s.value}</div>
+          <div class="stat-change ${s.trend}">${s.change}</div>
+        </div>
+      `).join("");
+    }
+
+    updateVehicleFilterButtons();
+    renderVehicleTable();
+
+    const alerts = document.getElementById("vehicle-alerts");
+    if (alerts) {
+      alerts.innerHTML = vehicleModuleData.alerts.map((item) => `
+        <div class="maint-item">
+          <div class="maint-item-icon ${item.iconClass}">${item.icon}</div>
+          <div class="maint-item-info">
+            <div class="maint-item-plate">${item.plate}</div>
+            <div class="maint-item-type">${item.type}</div>
+            <button class="sched-btn ${item.scheduled ? "scheduled" : ""}">${item.button}</button>
+          </div>
+          <div class="maint-item-right">
+            <div class="maint-due ${item.dueClass}">${item.dueText}</div>
+            <div class="maint-km">${item.km}</div>
+          </div>
+        </div>
+      `).join("");
+    }
+  }
+
+  function switchMainView(view, clickedNav) {
+    currentMainView = view;
+    document.querySelectorAll("nav .nav-item").forEach(item => item.classList.remove("active"));
+    if (clickedNav) clickedNav.classList.add("active");
+
+    const pageTitle = document.querySelector(".page-title");
+    const navPills = document.querySelector(".nav-pills");
+    const createBtn = document.querySelector(".btn-primary");
+    const dashboardView = document.getElementById("dashboard-view");
+    const vehiclesView = document.getElementById("vehicles-view");
+
+    if (view === "vehicles") {
+      if (pageTitle) pageTitle.textContent = "Phương tiện";
+      if (navPills) navPills.style.display = "none";
+      if (createBtn) createBtn.textContent = "+ Thêm xe";
+      if (dashboardView) dashboardView.style.display = "none";
+      if (vehiclesView) vehiclesView.style.display = "block";
+      return;
+    }
+
+    if (pageTitle) pageTitle.textContent = "Dashboard";
+    if (navPills) navPills.style.display = "flex";
+    if (createBtn) createBtn.textContent = "+ Tạo chuyến";
+    if (dashboardView) dashboardView.style.display = "block";
+    if (vehiclesView) vehiclesView.style.display = "none";
   }
 </script>
 </body>
