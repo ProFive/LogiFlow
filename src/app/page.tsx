@@ -2,6 +2,26 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import {
+  RBAC_CELL_LABEL,
+  RBAC_MATRIX_ROWS,
+  RBAC_ROLE_DEFS,
+  type RbacCell,
+} from "@/lib/rbac-landing-data";
+
+function RbacMatrixCell({ cell }: { cell: RbacCell }) {
+  if (cell === "dash") {
+    return <span className="rbac-matrix-dash">—</span>;
+  }
+  const label = RBAC_CELL_LABEL[cell];
+  const variant =
+    cell === "full" || cell === "cru"
+      ? "rbac-matrix-badge--ok"
+      : cell === "read" || cell === "all"
+        ? "rbac-matrix-badge--read"
+        : "rbac-matrix-badge--scope";
+  return <span className={`rbac-matrix-badge ${variant}`}>{label}</span>;
+}
 
 export default function Home() {
   const [lang, setLang] = useState<"vi" | "en">("vi");
@@ -51,9 +71,11 @@ export default function Home() {
           { title: "Go-to-market edge", desc: "Fast onboarding, intuitive UX, and practical workflows for field teams." },
         ],
         traction: "Traction",
-        traction1: "Pilot customers",
-        traction2: "Trips processed daily",
-        traction3: "On-time delivery rate",
+        tractionCards: [
+          { title: "10+", desc: "Pilot customers" },
+          { title: "500+", desc: "Trips processed daily" },
+          { title: "91%", desc: "On-time delivery rate" },
+        ],
         businessModel: "Business Model",
         businessCards: [
           { title: "SaaS Subscription", desc: "Monthly plans based on active vehicles, scalable by business size." },
@@ -72,6 +94,50 @@ export default function Home() {
           { title: "CEO / Product", desc: "Hands-on logistics operations experience and B2B SaaS product building." },
           { title: "CTO / Engineering", desc: "Strong track record in real-time systems, data pipelines, and platform scale." },
           { title: "Ops Advisor", desc: "Domain advisory in transport operations and cost optimization in Vietnam." },
+        ],
+        rbacEyebrow: "Security & access control",
+        rbacTitle: "RBAC + Data-level permissions",
+        rbacIntroBefore: "We combine ",
+        rbacIntroStrong1: "Role-Based Access Control",
+        rbacIntroMid: " with ",
+        rbacIntroStrong2: "Data-level Permission",
+        rbacIntroAfter:
+          " — so every user only sees and does what they are allowed to—no more, no less.",
+        rbacMatrixTitle: "Permission matrix (11 resources × 6 roles)",
+        rbacMatrixColResource: "Resource",
+        rbacMatrixColumns: ["Admin", "Manager", "Operation", "Driver", "Warehouse", "Customer"],
+        rbacDataTitle: "Data-level permissions",
+        rbacDataPrinciplesTitle: "General principles",
+        rbacDataSchemaTitle: "Suggested DB schema",
+        rbacDataSchemaLines: [
+          "roles(id, name, description)",
+          "permissions(id, resource, action)",
+          "role_permissions(role_id, permission_id)",
+          "users(id, role_id, tenant_id, branch_id)",
+          "permission_audit_log(user_id, action, changed_by, created_at)",
+        ],
+        rbacPrinciples: [
+          {
+            lead: "1. Every query is automatically filtered by ",
+            code: "tenant_id",
+          },
+          {
+            lead: "2. Drivers only see orders where ",
+            code: "driver_id = me",
+          },
+          {
+            lead: "3. Customers only see orders where ",
+            code: "customer_id = me",
+          },
+          {
+            lead: "4. Operations scope: ",
+            code: "branch_id IN allowed_branches",
+          },
+          {
+            lead: "5. Filters apply at the ",
+            strong: "Repository",
+            tail: " layer—not only in controllers.",
+          },
         ],
         finalCta: "CTA · Explore investment opportunity in LogiFlow",
         finalDesc:
@@ -127,9 +193,11 @@ export default function Home() {
         { title: "Lợi thế tiếp cận", desc: "Chu kỳ triển khai ngắn, UX đơn giản, phù hợp đội vận hành thực địa." },
       ],
       traction: "Kết quả tăng trưởng",
-      traction1: "Khách hàng pilot",
-      traction2: "Chuyến xử lý mỗi ngày",
-      traction3: "Tỷ lệ giao đúng hẹn",
+      tractionCards: [
+        { title: "10+", desc: "Khách hàng pilot" },
+        { title: "500+", desc: "Chuyến xử lý mỗi ngày" },
+        { title: "91%", desc: "Tỷ lệ giao đúng hẹn" },
+      ],
       businessModel: "Mô hình kinh doanh",
       businessCards: [
         { title: "Gói thuê bao SaaS", desc: "Gói theo số xe hoạt động/tháng, mở rộng theo quy mô doanh nghiệp." },
@@ -149,6 +217,50 @@ export default function Home() {
         { title: "Giám đốc công nghệ / Kỹ thuật", desc: "Năng lực triển khai hệ thống realtime, data pipeline và platform scale." },
         { title: "Cố vấn vận hành", desc: "Cố vấn mạng lưới vận tải và tối ưu chi phí điều phối tại Việt Nam." },
       ],
+      rbacEyebrow: "Bảo mật & Kiểm soát truy cập",
+      rbacTitle: "Phân quyền RBAC + Data-level",
+      rbacIntroBefore: "Mô hình ",
+      rbacIntroStrong1: "Role-Based Access Control",
+      rbacIntroMid: " kết hợp ",
+      rbacIntroStrong2: "Data-level Permission",
+      rbacIntroAfter:
+        " — đảm bảo mỗi người dùng chỉ thấy và làm được đúng những gì họ được phép, không hơn không kém.",
+      rbacMatrixTitle: "Ma trận quyền hạn (11 tài nguyên × 6 vai trò)",
+      rbacMatrixColResource: "Tài nguyên",
+      rbacMatrixColumns: ["Admin", "Manager", "Operation", "Driver", "Warehouse", "Customer"],
+      rbacDataTitle: "Phân quyền theo dữ liệu (Data-level)",
+      rbacDataPrinciplesTitle: "🔑 Nguyên tắc chung",
+      rbacDataSchemaTitle: "🗄️ DB Schema gợi ý",
+      rbacDataSchemaLines: [
+        "roles(id, name, description)",
+        "permissions(id, resource, action)",
+        "role_permissions(role_id, permission_id)",
+        "users(id, role_id, tenant_id, branch_id)",
+        "permission_audit_log(user_id, action, changed_by, created_at)",
+      ],
+      rbacPrinciples: [
+        {
+          lead: "1. Mọi query đều tự động filter theo ",
+          code: "tenant_id",
+        },
+        {
+          lead: "2. Driver chỉ thấy đơn: ",
+          code: "driver_id = me",
+        },
+        {
+          lead: "3. Customer chỉ thấy đơn: ",
+          code: "customer_id = me",
+        },
+        {
+          lead: "4. Operation filter: ",
+          code: "branch_id IN allowed_branches",
+        },
+        {
+          lead: "5. Filter áp dụng ở ",
+          strong: "tầng Repository",
+          tail: ", không phụ thuộc vào controller",
+        },
+      ],
       finalCta: "Hành động · Tìm hiểu cơ hội đầu tư vào LogiFlow",
       finalDesc:
         "Chúng tôi đang mở vòng gọi vốn để mở rộng sản phẩm và tăng tốc thương mại hóa. Sẵn sàng gửi deck, data room và lịch product walkthrough.",
@@ -160,199 +272,324 @@ export default function Home() {
     };
   }, [lang]);
 
+  const rbacRoleCards = useMemo(
+    () => RBAC_ROLE_DEFS.map((def) => ({ accent: def.accent, ...(lang === "vi" ? def.vi : def.en) })),
+    [lang],
+  );
+
   return (
-    <main className="landing">
-      <div className="bg-orb orb-1" />
-      <div className="bg-orb orb-2" />
-      <div className="bg-orb orb-3" />
-      <header className="landing-nav">
-        <div className="brand">LogiFlow</div>
-        <div className="landing-actions">
-          <div className="lang-switch">
-            <button
-              type="button"
-              className={`lang-btn ${lang === "vi" ? "active" : ""}`}
-              onClick={() => setLang("vi")}
-            >
-              VI
-            </button>
-            <button
-              type="button"
-              className={`lang-btn ${lang === "en" ? "active" : ""}`}
-              onClick={() => setLang("en")}
-            >
-              EN
-            </button>
-          </div>
-          <Link href="/login" className="btn btn-ghost">
-            {t.login}
-          </Link>
-          <Link href="/register" className="btn btn-primary">
-            {t.register}
-          </Link>
-        </div>
-      </header>
-
-      <section className="hero reveal delay-1">
-        <p className="eyebrow">{t.eyebrow}</p>
-        <h1 key={lang}>
-          {t.heroTitle}
-        </h1>
-        <p>{t.heroDesc}</p>
-        <div className="hero-metrics">
-          <div>
-            <strong>35%</strong>
-            <span>{t.metric1}</span>
-          </div>
-          <div>
-            <strong>18%</strong>
-            <span>{t.metric2}</span>
-          </div>
-          <div>
-            <strong>96%</strong>
-            <span>{t.metric3}</span>
-          </div>
-        </div>
-        <div className="hero-cta">
-          <Link href="/register" className="btn btn-primary">
-            {t.ctaTry}
-          </Link>
-          <Link href="/dashboard" className="btn btn-ghost">
-            {t.ctaDemo}
-          </Link>
-          <Link href="/login" className="btn btn-ghost">
-            {t.ctaInvestor}
-          </Link>
-        </div>
-      </section>
-
-      <section className="section-block reveal delay-2">
-        <h2>{t.problem}</h2>
-        <div className="features">
-          {t.problemCards.map((card) => (
-            <article key={card.title}>
-              <h3>{card.title}</h3>
-              <p>{card.desc}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section-block reveal delay-3">
-        <h2>{t.solution}</h2>
-        <div className="single-card">{t.solutionDesc}</div>
-      </section>
-
-      <section className="section-block reveal delay-4">
-        <h2>{t.product}</h2>
-        <div className="features investor-grid">
-          {t.productCards.map((card) => (
-            <article key={card.title}>
-              <h3>{card.title}</h3>
-              <p>{card.desc}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section-block reveal delay-5">
-        <h2>{t.market}</h2>
-        <div className="features">
-          {t.marketCards.map((card) => (
-            <article key={card.title}>
-              <h3>{card.title}</h3>
-              <p>{card.desc}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section-block reveal delay-6">
-        <h2>{t.traction}</h2>
-        <div className="hero-metrics">
-          <div>
-            <strong>10+</strong>
-            <span>{t.traction1}</span>
-          </div>
-          <div>
-            <strong>500+</strong>
-            <span>{t.traction2}</span>
-          </div>
-          <div>
-            <strong>91%</strong>
-            <span>{t.traction3}</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="section-block reveal delay-7">
-        <h2>{t.businessModel}</h2>
-        <div className="features">
-          {t.businessCards.map((card) => (
-            <article key={card.title}>
-              <h3>{card.title}</h3>
-              <p>{card.desc}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="timeline section-block reveal delay-8">
-        <h2>{t.roadmap}</h2>
-        <div className="timeline-grid">
-          {t.roadmapItems.map((item) => (
-            <article key={item.q}>
-              <h4>{item.q}</h4>
-              <p>{item.d}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section-block reveal delay-9">
-        <h2>{t.team}</h2>
-        <div className="features">
-          {t.teamCards.map((card) => (
-            <article key={card.title}>
-              <h3>{card.title}</h3>
-              <p>{card.desc}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section-block reveal delay-10">
-        <div className="final-grid">
-          <article className="cta-panel">
-            <h2>{t.finalCta}</h2>
-            <p>{t.finalDesc}</p>
-            <div className="hero-cta">
-              <Link href="/register" className="btn btn-primary">
-                {t.finalDeck}
-              </Link>
-              <Link href="/login" className="btn btn-ghost">
-                {t.finalData}
-              </Link>
+    <main className="landing-root">
+      <div className="landing-shell">
+        <div className="bg-orb orb-1" />
+        <div className="bg-orb orb-2" />
+        <div className="bg-orb orb-3" />
+        <header className="landing-nav">
+          <div className="brand">LogiFlow</div>
+          <div className="landing-actions">
+            <div className="lang-switch">
+              <button
+                type="button"
+                className={`lang-btn ${lang === "vi" ? "active" : ""}`}
+                onClick={() => setLang("vi")}
+              >
+                VI
+              </button>
+              <button
+                type="button"
+                className={`lang-btn ${lang === "en" ? "active" : ""}`}
+                onClick={() => setLang("en")}
+              >
+                EN
+              </button>
             </div>
-          </article>
-          <article className="contact-panel">
-            <div className="eyebrow" style={{ marginBottom: "8px" }}>
-              {lang === "vi" ? "LogiFlow - Quản lý vận tải" : "LogiFlow - Fleet Management"}
+            <Link href="/login" className="btn btn-ghost">
+              {t.login}
+            </Link>
+            <Link href="/register" className="btn btn-primary">
+              {t.register}
+            </Link>
+          </div>
+        </header>
+
+        <section className="hero reveal delay-1">
+          <p className="eyebrow">{t.eyebrow}</p>
+          <h1 key={lang}>
+            {t.heroTitle}
+          </h1>
+          <p>{t.heroDesc}</p>
+          <div className="hero-metrics">
+            <div>
+              <strong>35%</strong>
+              <span>{t.metric1}</span>
             </div>
-            <h2>{t.contactTitle}</h2>
-            <div className="contact-grid">
-              <div className="contact-item">
-                <div className="contact-label">{t.contactEmailLabel}</div>
-                <div className="contact-value">info@LogiFlow.vn</div>
+            <div>
+              <strong>18%</strong>
+              <span>{t.metric2}</span>
+            </div>
+            <div>
+              <strong>96%</strong>
+              <span>{t.metric3}</span>
+            </div>
+          </div>
+          <div className="hero-cta">
+            <Link href="/register" className="btn btn-primary">
+              {t.ctaTry}
+            </Link>
+            <Link href="/dashboard" className="btn btn-ghost">
+              {t.ctaDemo}
+            </Link>
+            <Link href="/login" className="btn btn-ghost">
+              {t.ctaInvestor}
+            </Link>
+          </div>
+        </section>
+      </div>
+
+      <div className="landing-band landing-band--story">
+        <div className="landing-band-inner">
+          <section className="section-block reveal delay-2">
+            <h2>{t.problem}</h2>
+            <div className="features">
+              {t.problemCards.map((card) => (
+                <article key={card.title}>
+                  <h3>{card.title}</h3>
+                  <p>{card.desc}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="section-block reveal delay-3">
+            <h2>{t.solution}</h2>
+            <div className="single-card">{t.solutionDesc}</div>
+          </section>
+
+          <section className="section-block reveal delay-4">
+            <h2>{t.product}</h2>
+            <div className="features investor-grid">
+              {t.productCards.map((card) => (
+                <article key={card.title}>
+                  <h3>{card.title}</h3>
+                  <p>{card.desc}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div className="landing-band landing-band--market">
+        <div className="landing-band-inner">
+          <section className="section-block reveal delay-5">
+            <h2>{t.market}</h2>
+            <div className="features">
+              {t.marketCards.map((card) => (
+                <article key={card.title}>
+                  <h3>{card.title}</h3>
+                  <p>{card.desc}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="section-block reveal delay-6">
+            <h2>{t.traction}</h2>
+            <div className="features features--traction">
+              {t.tractionCards.map((card) => (
+                <article key={card.title}>
+                  <h3>{card.title}</h3>
+                  <p>{card.desc}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="section-block reveal delay-7">
+            <h2>{t.businessModel}</h2>
+            <div className="features">
+              {t.businessCards.map((card) => (
+                <article key={card.title}>
+                  <h3>{card.title}</h3>
+                  <p>{card.desc}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div className="landing-band landing-band--roadmap">
+        <div className="landing-band-inner">
+          <section className="timeline section-block reveal delay-8">
+            <h2>{t.roadmap}</h2>
+            <div className="timeline-grid">
+              {t.roadmapItems.map((item) => (
+                <article key={item.q}>
+                  <h4>{item.q}</h4>
+                  <p>{item.d}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div className="landing-band landing-band--security">
+        <div className="landing-band-inner">
+          <section className="section-block rbac-section reveal delay-9">
+        <p className="eyebrow rbac-section-eyebrow">{t.rbacEyebrow}</p>
+        <h2>{t.rbacTitle}</h2>
+        <p className="rbac-intro">
+          {t.rbacIntroBefore}
+          <strong>{t.rbacIntroStrong1}</strong>
+          {t.rbacIntroMid}
+          <strong>{t.rbacIntroStrong2}</strong>
+          {t.rbacIntroAfter}
+        </p>
+
+        <div className="rbac-roles-grid">
+          {rbacRoleCards.map((role) => (
+            <article key={role.title} className={`rbac-role-card rbac-role-card--${role.accent}`}>
+              <header className="rbac-role-head">
+                <h3>{role.title}</h3>
+                <p className="rbac-role-sub">{role.subtitle}</p>
+              </header>
+              <div className="rbac-role-body">
+                {role.plus.map((line) => (
+                  <div key={line} className="rbac-role-line rbac-role-line--ok">
+                    <span className="rbac-role-mark" aria-hidden>
+                      ✓
+                    </span>
+                    <span>{line}</span>
+                  </div>
+                ))}
+                {role.minus.map((line) => (
+                  <div key={line} className="rbac-role-line rbac-role-line--no">
+                    <span className="rbac-role-mark" aria-hidden>
+                      ✗
+                    </span>
+                    <span>{line}</span>
+                  </div>
+                ))}
+                <div className="rbac-role-scope">
+                  <span className="rbac-role-scope-label">{role.scopeLabel}</span>{" "}
+                  <strong>{role.scope}</strong>
+                </div>
               </div>
-              <div className="contact-item">
-                <div className="contact-label">{t.contactPhoneLabel}</div>
-                <div className="contact-value">0935.357.567</div>
-              </div>
-            </div>
+            </article>
+          ))}
+        </div>
+
+        <h3 className="rbac-subheading">{t.rbacMatrixTitle}</h3>
+        <div className="rbac-matrix-scroll">
+          <table className="rbac-matrix-table">
+            <thead>
+              <tr>
+                <th scope="col">{t.rbacMatrixColResource}</th>
+                {t.rbacMatrixColumns.map((col) => (
+                  <th key={col} scope="col">
+                    {col}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {RBAC_MATRIX_ROWS.map((row) => (
+                <tr key={row.resourceEn}>
+                  <th scope="row">{lang === "vi" ? row.resourceVi : row.resourceEn}</th>
+                  {row.cells.map((cell, i) => (
+                    <td key={`${row.resourceEn}-${i}`}>
+                      <RbacMatrixCell cell={cell} />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <h3 className="rbac-subheading">{t.rbacDataTitle}</h3>
+        <div className="rbac-data-grid">
+          <article className="rbac-data-card">
+            <h4>{t.rbacDataPrinciplesTitle}</h4>
+            <ul className="rbac-principles">
+              {t.rbacPrinciples.map((p, idx) => (
+                <li key={idx}>
+                  {"code" in p && p.code ? (
+                    <>
+                      {p.lead}
+                      <code className="rbac-inline-code">{p.code}</code>
+                    </>
+                  ) : (
+                    <>
+                      {p.lead}
+                      <strong>{"strong" in p ? p.strong : ""}</strong>
+                      {"tail" in p ? p.tail : ""}
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </article>
+          <article className="rbac-data-card">
+            <h4>{t.rbacDataSchemaTitle}</h4>
+            <pre className="rbac-schema">
+              {t.rbacDataSchemaLines.join("\n")}
+            </pre>
           </article>
         </div>
-      </section>
+          </section>
+        </div>
+      </div>
+
+      <div className="landing-band landing-band--closing">
+        <div className="landing-band-inner">
+          <section className="section-block reveal delay-10">
+            <h2>{t.team}</h2>
+            <div className="features">
+              {t.teamCards.map((card) => (
+                <article key={card.title}>
+                  <h3>{card.title}</h3>
+                  <p>{card.desc}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="section-block reveal delay-11">
+            <div className="final-grid">
+              <article className="cta-panel">
+                <h2>{t.finalCta}</h2>
+                <p>{t.finalDesc}</p>
+                <div className="hero-cta">
+                  <Link href="/register" className="btn btn-primary">
+                    {t.finalDeck}
+                  </Link>
+                  <Link href="/login" className="btn btn-ghost">
+                    {t.finalData}
+                  </Link>
+                </div>
+              </article>
+              <article className="contact-panel">
+                <div className="eyebrow" style={{ marginBottom: "8px" }}>
+                  {lang === "vi" ? "LogiFlow - Quản lý vận tải" : "LogiFlow - Fleet Management"}
+                </div>
+                <h2>{t.contactTitle}</h2>
+                <div className="contact-grid">
+                  <div className="contact-item">
+                    <div className="contact-label">{t.contactEmailLabel}</div>
+                    <div className="contact-value">info@LogiFlow.vn</div>
+                  </div>
+                  <div className="contact-item">
+                    <div className="contact-label">{t.contactPhoneLabel}</div>
+                    <div className="contact-value">0935.357.567</div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+      </div>
     </main>
   );
 }
